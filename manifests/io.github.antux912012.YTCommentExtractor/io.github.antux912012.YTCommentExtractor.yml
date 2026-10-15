@@ -1,0 +1,38 @@
+app-id: io.github.antux912012.YTCommentExtractor
+runtime: org.gnome.Platform
+runtime-version: '46'
+sdk: org.gnome.Sdk
+command: start-yt-extractor
+finish-args:
+  - --share=network
+  - --share=ipc
+  - --socket=fallback-x11
+  - --socket=wayland
+  - --filesystem=xdg-download
+  - --filesystem=home
+  - --device=dri
+modules:
+  - name: python-deps
+    buildsystem: simple
+    build-options:
+      build-args:
+        - --share=network
+    build-commands:
+      - pip3 install --prefix=/app -r requirements.txt
+    sources:
+      - type: git
+        url: https://github.com/Antux912012/YT-Comment-Extractor-GTK.git
+        branch: main
+
+  - name: yt-extractor
+    buildsystem: simple
+    build-commands:
+      - mkdir -p /app/share/yt-extractor
+      - cp scraper.py main_gtk.py /app/share/yt-extractor/
+      - install -D start-yt-extractor /app/bin/start-yt-extractor
+      - install -D io.github.antux912012.YTCommentExtractor.desktop /app/share/applications/io.github.antux912012.YTCommentExtractor.desktop
+      - install -D io.github.antux912012.YTCommentExtractor.svg /app/share/icons/hicolor/scalable/apps/io.github.antux912012.YTCommentExtractor.svg
+    sources:
+      - type: git
+        url: https://github.com/Antux912012/YT-Comment-Extractor-GTK.git
+        branch: main

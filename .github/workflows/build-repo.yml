@@ -1,0 +1,124 @@
+name: Build and Deploy Arda-Tech Flatpak Repo
+
+on:
+  push:
+    branches: [ "main" ]
+  repository_dispatch:
+    types: [ "flatpak-rebuild" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+jobs:
+  build-flatpaks:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/flathub-infra/flatpak-github-actions:freedesktop-25.08
+      options: --privileged
+
+    steps:
+      - name: Checkout arda-tech repository
+        uses: actions/checkout@v4
+
+      - name: Configure container user environment
+        run: |
+          cat <<EOF> /etc/passwd
+          root:x:0:0:root:/root:/bin/bash
+          EOF
+          cat <<EOF> /etc/group
+          root:x:0:
+          EOF
+          git config --global --add safe.directory "*" || true
+
+      - name: Add Flathub remote for dependencies
+        run: |
+          flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
+
+      - name: Import GPG Key for OSTree Signing
+        env:
+          GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
+        run: |
+          echo "$GPG_PRIVATE_KEY" | gpg --import --batch
+
+      - name: Fetch existing OSTree repository from gh-pages (if exists)
+        run: |
+          git fetch origin gh-pages || true
+          if git show-ref --verify --quiet refs/remotes/origin/gh-pages; then
+            git worktree add /tmp/gh-pages origin/gh-pages
+            if [ -d "/tmp/gh-pages/repo" ]; then
+              cp -a /tmp/gh-pages/repo ./repo
+            fi
+          fi
+
+      - name: Build all Flatpak manifests into central repo
+        env:
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          mkdir -p bundles
+          mkdir -p repo
+          if [ ! -f "repo/config" ]; then
+            ostree init --mode=archive-z2 --repo=repo || true
+          fi
+
+          for manifest in $(find manifests/ -maxdepth 2 \( -name "*.yaml" -o -name "*.yml" -o -name "*.json" \)); do
+            echo "=========================================================="
+            echo "Building manifest: $manifest"
+            echo "=========================================================="
+            APP_FILENAME=$(basename "$manifest")
+            APP_ID="${APP_FILENAME%.*}"
+            
+            flatpak-builder build-dir \
+              --user \
+              --install-deps-from=flathub \
+              --gpg-sign="${GPG_KEY_ID}" \
+              --disable-rofiles-fuse \
+              --disable-updates \
+              --force-clean \
+              --default-branch=stable \
+              --repo=repo \
+              "$manifest" || echo "Warning: Failed to build $APP_ID"
+              
+            flatpak build-bundle \
+              --gpg-sign="${GPG_KEY_ID}" \
+              repo \
+              "bundles/${APP_ID}.flatpak" \
+              --runtime-repo=https://dl.flathub.org/repo/flathub.flatpakrepo \
+              "${APP_ID}" stable || echo "Warning: Bundle generation skipped for $APP_ID"
+          done
+
+      - name: Update repository metadata & generate static deltas
+        env:
+          GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
+        run: |
+          flatpak build-update-repo \
+            --gpg-sign="${GPG_KEY_ID}" \
+            --generate-static-deltas \
+            --prune \
+            repo/
+
+      - name: Prepare static site payload for GitHub Pages
+        run: |
+          mkdir -p public
+          cp -a repo public/repo
+          cp arda-tech.flatpakrepo public/
+          cp arda-tech.gpg public/
+          if [ -f "logo.svg" ]; then cp logo.svg public/; fi
+          if [ -f "index.html" ]; then cp index.html public/; fi
+          if [ -d "refs" ]; then cp -a refs/* public/; fi
+          touch public/.nojekyll
+
+      - name: Deploy to gh-pages branch
+        env:
+          CI_GIT_TOKEN: ${{ secrets.CI_GIT_TOKEN }}
+        run: |
+          cd public
+          git init
+          git config user.name "Arda Tech CI"
+          git config user.email "antux912012@users.noreply.github.com"
+          git checkout -b gh-pages
+          git add --all
+          git commit -m "Deploy Arda-Tech Flatpak Repository"
+          git push --force "https://Antux912012:${CI_GIT_TOKEN}@github.com/Antux912012/arda-tech.git" gh-pages

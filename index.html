@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Arda Tech — Central Flatpak Repository</title>
+  <link rel="icon" type="image/svg+xml" href="logo.svg">
+  <style>
+    :root {
+      --bg-color: #0b0f19;
+      --card-bg: #151d2f;
+      --card-border: #1e293b;
+      --card-hover: #1e2a44;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #38bdf8;
+      --accent-hover: #0284c7;
+      --code-bg: #030712;
+      --purple-accent: #818cf8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 2rem 1rem;
+    }
+
+    .container {
+      max-width: 1040px;
+      margin: 0 auto;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .logo-container {
+      margin-bottom: 1.5rem;
+    }
+
+    .logo-container img {
+      width: 110px;
+      height: 110px;
+      filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.4));
+    }
+
+    h1 {
+      font-size: 2.75rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #38bdf8 0%, #818cf8 50%, #c084fc 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.75rem;
+      letter-spacing: -0.025em;
+    }
+
+    p.subtitle {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 640px;
+      margin: 0 auto 1.75rem;
+    }
+
+    .quick-add-box {
+      background: var(--code-bg);
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      max-width: 750px;
+      margin: 0 auto;
+      text-align: left;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .quick-add-box h3 {
+      font-size: 0.95rem;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .code-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 0.75rem 1rem;
+      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 0.9rem;
+      overflow-x: auto;
+    }
+
+    .code-row code {
+      color: #e2e8f0;
+      white-space: nowrap;
+    }
+
+    .btn-copy {
+      background: var(--accent);
+      color: #0b0f19;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      white-space: nowrap;
+    }
+
+    .btn-copy:hover {
+      background: #7dd3fc;
+    }
+
+    .links-bar {
+      margin-top: 1.25rem;
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+    }
+
+    .links-bar a {
+      color: var(--accent);
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .links-bar a:hover {
+      text-decoration: underline;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .apps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3.5rem;
+    }
+
+    .app-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .app-card:hover {
+      transform: translateY(-4px);
+      border-color: #38bdf8;
+      box-shadow: 0 12px 24px -10px rgba(56, 189, 248, 0.2);
+    }
+
+    .app-header {
+      margin-bottom: 1rem;
+    }
+
+    .app-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.25rem;
+    }
+
+    .app-id {
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      word-break: break-all;
+    }
+
+    .app-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.25rem;
+      flex-grow: 1;
+    }
+
+    .app-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .app-install-cmd {
+      background: var(--code-bg);
+      border: 1px solid #1e293b;
+      border-radius: 6px;
+      padding: 0.5rem 0.75rem;
+      font-family: ui-monospace, monospace;
+      font-size: 0.8rem;
+      color: #94a3b8;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .btn-install {
+      background: linear-gradient(135deg, #0284c7 0%, #2563eb 100%);
+      color: #ffffff;
+      text-decoration: none;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-align: center;
+      transition: opacity 0.2s;
+    }
+
+    .btn-install:hover {
+      opacity: 0.9;
+    }
+
+    footer {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid var(--card-border);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo-container">
+        <img src="logo.svg" alt="Arda Tech Logo">
+      </div>
+      <h1>Arda Tech Flatpak Repository</h1>
+      <p class="subtitle">Official centralized Flatpak repository hosting modern Linux applications built by Antux912012.</p>
+
+      <div class="quick-add-box">
+        <h3>Add Repository via Terminal</h3>
+        <div class="code-row">
+          <code id="repo-cmd">flatpak remote-add --if-not-exists arda-tech https://Antux912012.github.io/arda-tech/arda-tech.flatpakrepo</code>
+          <button class="btn-copy" onclick="copyRepoCmd()">Copy</button>
+        </div>
+      </div>
+
+      <div class="links-bar">
+        <a href="arda-tech.flatpakrepo" download>📥 Download .flatpakrepo</a>
+        <a href="arda-tech.gpg" download>🔑 Download GPG Public Key</a>
+        <a href="https://github.com/Antux912012/arda-tech" target="_blank">🐙 GitHub Repository</a>
+      </div>
+    </header>
+
+    <h2 class="section-title">📦 Available Applications</h2>
+
+    <div class="apps-grid">
+      <!-- CachyOS Kernel Updater -->
+      <div class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">CachyOS Kernel Updater</h3>
+          <span class="app-id">org.cachyos.debian.kernelupdater</span>
+        </div>
+        <p class="app-desc">Check, compile, install, and manage CachyOS Linux kernels on Debian systems.</p>
+        <div class="app-actions">
+          <div class="app-install-cmd">flatpak install arda-tech org.cachyos.debian.kernelupdater</div>
+          <a href="org.cachyos.debian.kernelupdater.flatpakref" class="btn-install">Install with .flatpakref</a>
+        </div>
+      </div>
+
+      <!-- Imladris -->
+      <div class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">Imladris</h3>
+          <span class="app-id">org.gnome.Imladris</span>
+        </div>
+        <p class="app-desc">Native GTK4 & Libadwaita Markdown Editor with GtkSourceView 5, WebKitGTK 6.0, and libcmark.</p>
+        <div class="app-actions">
+          <div class="app-install-cmd">flatpak install arda-tech org.gnome.Imladris</div>
+          <a href="org.gnome.Imladris.flatpakref" class="btn-install">Install with .flatpakref</a>
+        </div>
+      </div>
+
+      <!-- Mithrandir -->
+      <div class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">Mithrandir</h3>
+          <span class="app-id">io.github.antonio.Mithrandir</span>
+        </div>
+        <p class="app-desc">Modern GNU/Linux cleaner, optimizer, and AI-assisted diagnostics utility built in GTK4 / Libadwaita.</p>
+        <div class="app-actions">
+          <div class="app-install-cmd">flatpak install arda-tech io.github.antonio.Mithrandir</div>
+          <a href="io.github.antonio.Mithrandir.flatpakref" class="btn-install">Install with .flatpakref</a>
+        </div>
+      </div>
+
+      <!-- Mithrandir RS -->
+      <div class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">Mithrandir (Rust)</h3>
+          <span class="app-id">io.github.antonio.MithrandirRS</span>
+        </div>
+        <p class="app-desc">High-performance GNU/Linux Cleaner, Optimizer, Telemetry & Diagnostics rewritten in Rust with GTK4 / Libadwaita.</p>
+        <div class="app-actions">
+          <div class="app-install-cmd">flatpak install arda-tech io.github.antonio.MithrandirRS</div>
+          <a href="io.github.antonio.MithrandirRS.flatpakref" class="btn-install">Install with .flatpakref</a>
+        </div>
+      </div>
+
+      <!-- Vingilot -->
+      <div class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">Vingilot</h3>
+          <span class="app-id">io.github.antux912012.Vingilot</span>
+        </div>
+        <p class="app-desc">Modern, privacy-focused desktop web browser built with Libadwaita (GTK4), WebKitGTK 6.0, Wayland compositing, and Vulkan rendering.</p>
+        <div class="app-actions">
+          <div class="app-install-cmd">flatpak install arda-tech io.github.antux912012.Vingilot</div>
+          <a href="io.github.antux912012.Vingilot.flatpakref" class="btn-install">Install with .flatpakref</a>
+        </div>
+      </div>
+
+      <!-- YouTube Comment Extractor -->
+      <div class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">YouTube Comment Extractor</h3>
+          <span class="app-id">io.github.antux912012.YTCommentExtractor</span>
+        </div>
+        <p class="app-desc">Extract and analyze YouTube video comments with a modern GTK4 and Libadwaita interface.</p>
+        <div class="app-actions">
+          <div class="app-install-cmd">flatpak install arda-tech io.github.antux912012.YTCommentExtractor</div>
+          <a href="io.github.antux912012.YTCommentExtractor.flatpakref" class="btn-install">Install with .flatpakref</a>
+        </div>
+      </div>
+
+      <!-- YouTube Comment Extractor Service -->
+      <div class="app-card">
+        <div class="app-header">
+          <h3 class="app-title">YouTube Comment Extractor Service</h3>
+          <span class="app-id">io.github.antux912012.YTCommentExtractor.Service</span>
+        </div>
+        <p class="app-desc">Background web server and system tray service for YouTube Comment Extractor.</p>
+        <div class="app-actions">
+          <div class="app-install-cmd">flatpak install arda-tech io.github.antux912012.YTCommentExtractor.Service</div>
+          <a href="io.github.antux912012.YTCommentExtractor.Service.flatpakref" class="btn-install">Install with .flatpakref</a>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>&copy; 2026 Arda Tech — Maintained by <a href="https://github.com/Antux912012" target="_blank">Antux912012</a>. Powered by Flatpak &amp; OSTree on GitHub Pages.</p>
+    </footer>
+  </div>
+
+  <script>
+    function copyRepoCmd() {
+      const cmd = document.getElementById('repo-cmd').innerText;
+      navigator.clipboard.writeText(cmd).then(() => {
+        const btn = document.querySelector('.btn-copy');
+        btn.innerText = 'Copied!';
+        setTimeout(() => btn.innerText = 'Copy', 2000);
+      });
+    }
+  </script>
+</body>
+</html>
