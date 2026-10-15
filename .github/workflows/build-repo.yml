@@ -107,7 +107,12 @@ jobs:
           cp arda-tech.gpg public/
           if [ -f "logo.svg" ]; then cp logo.svg public/; fi
           if [ -f "index.html" ]; then cp index.html public/; fi
-          if [ -d "refs" ]; then cp -a refs/* public/; fi
+          if [ -f "apps.json" ]; then cp apps.json public/; fi
+          if [ -d "refs" ]; then
+            cp -a refs/* public/
+            mkdir -p public/refs
+            cp -a refs/* public/refs/
+          fi
           touch public/.nojekyll
 
       - name: Deploy to gh-pages branch
