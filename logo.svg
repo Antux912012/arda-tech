@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="50%" stop-color="#1e1b4b"/>
+      <stop offset="100%" stop-color="#312e81"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38bdf8"/>
+      <stop offset="50%" stop-color="#818cf8"/>
+      <stop offset="100%" stop-color="#c084fc"/>
+    </linearGradient>
+    <linearGradient id="starGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff"/>
+      <stop offset="100%" stop-color="#e0e7ff"/>
+    </linearGradient>
+    <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background Circle with subtle border -->
+  <circle cx="256" cy="256" r="240" fill="url(#bgGrad)" stroke="url(#accentGrad)" stroke-width="8"/>
+
+  <!-- Orbital Rings -->
+  <ellipse cx="256" cy="256" rx="200" ry="75" fill="none" stroke="#38bdf8" stroke-width="2.5" opacity="0.3" transform="rotate(-25 256 256)"/>
+  <ellipse cx="256" cy="256" rx="200" ry="75" fill="none" stroke="#818cf8" stroke-width="2.5" opacity="0.3" transform="rotate(35 256 256)"/>
+
+  <!-- Eight-pointed Star of Arda / Eärendil -->
+  <g filter="url(#glow)">
+    <!-- Primary vertical/horizontal rays -->
+    <path d="M256,60 L272,216 L428,256 L272,296 L256,452 L240,296 L84,256 L240,216 Z" fill="url(#accentGrad)"/>
+    <!-- Diagonal rays -->
+    <path d="M256,120 L267,230 L377,256 L267,282 L256,392 L245,282 L135,256 L245,230 Z" fill="url(#starGrad)" opacity="0.9"/>
+  </g>
+
+  <!-- Central Core Spark -->
+  <circle cx="256" cy="256" r="20" fill="#ffffff" filter="url(#glow)"/>
+  <circle cx="256" cy="256" r="8" fill="#38bdf8"/>
+</svg>
