@@ -356,10 +356,26 @@
 
                 <div>
                   <div class="flex items-center justify-between mb-1.5">
-                    <span class="text-xs font-mono text-nord-4"># 2. Summon any vessel from the sanctum</span>
+                    <span class="text-xs font-mono text-nord-4"># 2. Or bind the Arda-Tech Debian/Ubuntu PPA (APT)</span>
+                    <button
+                      type="button"
+                      onclick="copyText('curl -fsSL https://antux912012.github.io/arda-tech-ppa/setup.sh | sudo bash', this)"
+                      class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-lg bg-nord-1 hover:bg-nord-2 text-arda-laurelin border border-arda-gold/40 transition-colors focus:outline-none"
+                    >
+                      <span class="copy-label">Copy PPA</span>
+                    </button>
+                  </div>
+                  <div class="p-3 rounded-xl bg-[#11141B] border border-nord-2/60 font-mono text-xs text-nord-4 overflow-x-auto select-all">
+                    <span class="text-nord-14 select-none">λ </span>curl -fsSL <span class="text-nord-8">https://antux912012.github.io/arda-tech-ppa/setup.sh</span> | sudo bash
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-mono text-nord-4"># 3. Summon any vessel via APT or Flatpak</span>
                   </div>
                   <div class="p-3 rounded-xl bg-[#11141B] border border-nord-2/60 font-mono text-xs text-nord-4 overflow-x-auto">
-                    <span class="text-nord-14 select-none">λ </span>flatpak install arda-tech <span class="text-arda-laurelin">io.github.antux912012.Vingilot</span>
+                    <span class="text-nord-14 select-none">λ </span>sudo apt install <span class="text-arda-laurelin">mithrandir mithrandir-rs vingilot imladris</span>
                   </div>
                 </div>
 

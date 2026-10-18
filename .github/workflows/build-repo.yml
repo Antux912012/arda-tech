@@ -105,6 +105,12 @@ jobs:
           cp -a repo public/repo
           cp arda-tech.flatpakrepo public/
           cp arda-tech.gpg public/
+          if [ -f "KEY.gpg" ]; then cp KEY.gpg public/; fi
+          if [ -f "KEY.asc" ]; then cp KEY.asc public/; fi
+          if [ -f "arda-tech-archive-keyring.gpg" ]; then cp arda-tech-archive-keyring.gpg public/; fi
+          if [ -f "setup.sh" ]; then cp setup.sh public/; fi
+          if [ -d "dists" ]; then cp -a dists public/dists; fi
+          if [ -d "pool" ]; then cp -a pool public/pool; fi
           if [ -f "logo.svg" ]; then cp logo.svg public/; fi
           if [ -f "index.html" ]; then cp index.html public/; fi
           if [ -f "apps.json" ]; then cp apps.json public/; fi

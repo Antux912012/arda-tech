@@ -1,12 +1,47 @@
-# Arda Tech — Central Flatpak Repository
+# Arda Tech — Central APT PPA & Flatpak Repository
 
-Official centralized Flatpak repository hosting applications built and packaged by [Antux912012](https://github.com/Antux912012) (Arda Tech).
+Official centralized **Debian/Ubuntu APT PPA** and **Flatpak** repository hosting applications built and packaged by [Antux912012](https://github.com/Antux912012) (Arda Tech).
 
-Hosted on GitHub Pages at: **[https://Antux912012.github.io/arda-tech](https://Antux912012.github.io/arda-tech)**
+- **APT PPA Repository:** **[https://antux912012.github.io/arda-tech-ppa](https://antux912012.github.io/arda-tech-ppa)** ([`Antux912012/arda-tech-ppa`](https://github.com/Antux912012/arda-tech-ppa))
+- **Flatpak & Unified Portal:** **[https://Antux912012.github.io/arda-tech](https://Antux912012.github.io/arda-tech)**
 
 ---
 
-## 🚀 Quick Setup
+## ⚡ 1. Arda-Tech PPA (Debian / Ubuntu / Mint APT Repository)
+
+Add the **Arda-Tech PPA** with a single command:
+
+```bash
+curl -fsSL https://antux912012.github.io/arda-tech-ppa/setup.sh | sudo bash
+```
+
+Or configure manually:
+
+```bash
+sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://antux912012.github.io/arda-tech-ppa/KEY.gpg | sudo tee /etc/apt/keyrings/arda-tech.gpg >/dev/null
+echo "deb [signed-by=/etc/apt/keyrings/arda-tech.gpg] https://antux912012.github.io/arda-tech-ppa stable main" | sudo tee /etc/apt/sources.list.d/arda-tech.list
+sudo apt update
+```
+
+### APT Packages Available (`sudo apt install ...`)
+
+| Package | Version | Arch | APT Install Command |
+| :--- | :--- | :--- | :--- |
+| **Mithrandir** | `0.4.0` | `all` | `sudo apt install mithrandir` |
+| **Mithrandir-RS (Rust)** | `0.4.0` | `amd64` | `sudo apt install mithrandir-rs` |
+| **Vingilot Browser** | `0.1.4-1` | `amd64` | `sudo apt install vingilot` |
+| **Vingilot Estel** | `0.1.0-alpha-1` | `amd64` | `sudo apt install vingilot-estel` |
+| **Imladris Studio** | `0.4.0` | `amd64` | `sudo apt install imladris` |
+| **CachyOS Kernel Updater** | `1.1.2` | `all` | `sudo apt install cachy-kernel-updater` |
+| **YouTube Comment Extractor** | `0.2.0` | `all` | `sudo apt install yt-comment-extractor` |
+| **YouTube Comment Extractor Service** | `0.2.0` | `all` | `sudo apt install yt-comment-extractor-service` |
+| **Súlimo (Arda's Breath)** | `0.1.0` | `amd64` | `sudo apt install sulimo` |
+| **Validity VFS5011 Linux Fix** | `1.0.0` | `all` | `sudo apt install vfs5011-linux-fix` |
+
+---
+
+## 🚀 2. Arda-Tech Flatpak Repository
 
 Add the **Arda Tech** Flatpak repository with a single terminal command:
 
@@ -20,7 +55,7 @@ Or download the repository definition file:
 
 ---
 
-## 📦 Hosted Applications
+## 📦 Hosted Flatpak Applications
 
 | Application | App ID | Install Command | .flatpakref |
 | :--- | :--- | :--- | :--- |
