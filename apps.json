@@ -128,7 +128,7 @@
       "--socket=wayland",
       "--socket=fallback-x11",
       "--device=dri",
-      "--filesystem=host"
+      "--filesystem=home"
     ]
   },
   {
@@ -181,7 +181,7 @@
       "--socket=fallback-x11",
       "--device=dri",
       "--filesystem=xdg-download",
-      "--filesystem=home"
+      "--filesystem=~/.config/yt-comment-extractor:create"
     ]
   },
   {
