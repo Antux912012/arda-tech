@@ -30,7 +30,7 @@ sudo apt update
 | :--- | :--- | :--- | :--- |
 | **Mithrandir** | `0.4.1` | `all` | `sudo apt install mithrandir` |
 | **Mithrandir-RS (Rust)** | `0.4.1` | `amd64` | `sudo apt install mithrandir-rs` |
-| **Vingilot Browser** | `0.1.5-1` | `amd64` | `sudo apt install vingilot` |
+| **Vingilot Browser** | `0.1.6-1` | `amd64` | `sudo apt install vingilot` |
 | **Vingilot Estel** | `0.1.0-alpha-1` | `amd64` | `sudo apt install vingilot-estel` |
 | **Imladris Studio** | `0.4.0` | `amd64` | `sudo apt install imladris` |
 | **CachyOS Kernel Updater** | `1.1.2` | `all` | `sudo apt install cachy-kernel-updater` |
