@@ -1142,6 +1142,160 @@ sudo apt update</pre>
     }
 
     // ============================================================================
+    // 3b. AUTOMATIC GITHUB RELEASE VERSION UPDATER
+    // ============================================================================
+    const VERSION_CACHE_TTL_MS = 15 * 60 * 1000; // 15-minute cache to respect GitHub API rate limits
+
+    async function autoUpdateVersionsFromGitHub(options = {}) {
+      const force = options.force || false;
+      let updatedCount = 0;
+
+      for (const app of allApps) {
+        const repoUrl = app.repoUrl || app.github || '';
+        const match = repoUrl.match(/github\.com\/([^/]+\/[^/]+)/i);
+        if (!match) continue;
+        const repoSlug = match[1].replace(/\.git$/, '');
+
+        const cacheKey = `arda_ver_cache_${repoSlug.replace('/', '_')}`;
+        let cached = null;
+
+        if (!force) {
+          try {
+            const rawCache = sessionStorage.getItem(cacheKey);
+            if (rawCache) {
+              const parsed = JSON.parse(rawCache);
+              if (Date.now() - parsed.timestamp < VERSION_CACHE_TTL_MS) {
+                cached = parsed;
+              }
+            }
+          } catch (_) {}
+        }
+
+        let latestReleaseInfo = cached;
+
+        if (!latestReleaseInfo) {
+          try {
+            const res = await fetch(`https://api.github.com/repos/${repoSlug}/releases?per_page=5`);
+            if (res.status === 403) {
+              console.warn(`[Arda Tech] GitHub API rate-limited for ${repoSlug}. Using catalog version.`);
+              break;
+            }
+            if (res.ok) {
+              const releasesData = await res.json();
+              if (Array.isArray(releasesData) && releasesData.length > 0) {
+                // Find latest non-draft release, sorted by publication date
+                const sorted = [...releasesData].filter(r => !r.draft).sort((a, b) => {
+                  return new Date(b.published_at || b.created_at) - new Date(a.published_at || a.created_at);
+                });
+
+                // Handle sub-projects sharing a repo (e.g. vingilot-estel)
+                let rel = sorted[0];
+                if (app.aptPackage === 'vingilot-estel') {
+                  rel = sorted.find(r => {
+                    const title = ((r.name || '') + ' ' + (r.tag_name || '')).toLowerCase();
+                    const hasEstelAsset = (r.assets || []).some(a => (a.name || '').toLowerCase().includes('estel'));
+                    return title.includes('estel') || hasEstelAsset;
+                  });
+                }
+
+                if (rel) {
+                  latestReleaseInfo = {
+                    tagName: rel.tag_name,
+                    htmlUrl: rel.html_url,
+                    assets: (rel.assets || []).map(a => ({
+                      name: a.name,
+                      browser_download_url: a.browser_download_url
+                    })),
+                    timestamp: Date.now()
+                  };
+                }
+              }
+            }
+
+            // Fallback to tags if releases API returned no items
+            if (!latestReleaseInfo) {
+              const tagsRes = await fetch(`https://api.github.com/repos/${repoSlug}/tags?per_page=10`);
+              if (tagsRes.ok) {
+                const tagsData = await tagsRes.json();
+                if (Array.isArray(tagsData) && tagsData.length > 0) {
+                  let tag = tagsData[0];
+                  if (app.aptPackage === 'vingilot-estel') {
+                    tag = tagsData.find(t => (t.name || '').toLowerCase().includes('estel'));
+                  }
+                  if (tag) {
+                    latestReleaseInfo = {
+                      tagName: tag.name,
+                      htmlUrl: `${repoUrl}/releases/tag/${tag.name}`,
+                      assets: [],
+                      timestamp: Date.now()
+                    };
+                  }
+                }
+              }
+            }
+
+            if (latestReleaseInfo) {
+              try {
+                sessionStorage.setItem(cacheKey, JSON.stringify(latestReleaseInfo));
+              } catch (_) {}
+            }
+          } catch (err) {
+            console.debug(`[Arda Tech] Version check skipped for ${repoSlug}:`, err.message);
+            continue;
+          }
+        }
+
+        if (latestReleaseInfo && latestReleaseInfo.tagName) {
+          const rawTag = latestReleaseInfo.tagName;
+          const cleanTag = rawTag.replace(/^v/i, '').trim();
+          const currentVer = (app.version || '').trim();
+
+          // Only update if cleanTag is valid and not already matching
+          const isDifferent = cleanTag && currentVer !== cleanTag && !currentVer.startsWith(cleanTag + '-');
+
+          if (isDifferent) {
+            app.version = cleanTag;
+            app.lastReleaseUrl = latestReleaseInfo.htmlUrl;
+            updatedCount++;
+
+            // Update matching deb asset URL if available in release
+            if (app.aptPackage && latestReleaseInfo.assets) {
+              const matchingDeb = latestReleaseInfo.assets.find(a =>
+                a.name.startsWith(`${app.aptPackage}_`) && a.name.endsWith('.deb')
+              );
+              if (matchingDeb) {
+                app.releaseDebUrl = matchingDeb.browser_download_url;
+              }
+            }
+
+            // Dynamically update DOM badge on the card
+            document.querySelectorAll(`[data-app-version="${app.id}"]`).forEach(el => {
+              el.textContent = cleanTag;
+              el.title = `Live from GitHub release: ${rawTag}`;
+              el.classList.add('text-amber-400');
+            });
+
+            // If modal is open for this app, update modal text
+            const modalAppIdElem = document.getElementById('modalAppId');
+            if (modalAppIdElem && modalAppIdElem.textContent.includes(app.id)) {
+              const modalBranchElem = document.getElementById('modalAppBranch');
+              if (modalBranchElem) modalBranchElem.textContent = cleanTag;
+            }
+          }
+        }
+      }
+
+      if (updatedCount > 0) {
+        console.log(`[Arda Tech] Auto-updated ${updatedCount} app version(s) from GitHub releases.`);
+        const badge = document.getElementById('catalogSourceBadge');
+        if (badge) {
+          badge.textContent = `${allApps.length} Relics • Live Updated from GitHub Releases`;
+        }
+      }
+    }
+    window.autoUpdateVersionsFromGitHub = autoUpdateVersionsFromGitHub;
+
+    // ============================================================================
     // 4. LIVE GITHUB REPOSITORY SYNC (@Antux912012)
     // ============================================================================
     async function syncLiveFromGitHub() {
@@ -1177,6 +1331,7 @@ sudo apt update</pre>
           });
 
           await discoverRealIconsFromGitHubTrees();
+          await autoUpdateVersionsFromGitHub({ force: true });
           renderCatalog();
           badge.textContent = `${allApps.length} Relics • Synced Live with @Antux912012`;
           btnLabel.textContent = 'Synced with GitHub!';
@@ -1282,7 +1437,7 @@ sudo apt update</pre>
             <div class="space-y-2.5 pt-3.5 border-t border-arda-gold/25">
               <!-- Version & Runtime Metadata -->
               <div class="flex items-center justify-between text-xs font-mono text-nord-3 dark:text-nord-4">
-                <span>Version: <strong class="text-nord-14">${app.version || app.branch || 'stable'}</strong></span>
+                <span>Version: <strong class="text-nord-14 transition-colors duration-300" data-app-version="${app.id}">${app.version || app.branch || 'stable'}</strong></span>
                 <span>Arch: <strong class="text-nord-0 dark:text-nord-5">${app.arch || 'amd64'}</strong></span>
               </div>
 
@@ -1404,6 +1559,8 @@ sudo apt update</pre>
       renderCatalog();
       // Automatically resolve real icons from GitHub repository trees in the background
       discoverRealIconsFromGitHubTrees();
+      // Automatically update app versions from latest GitHub releases in the background
+      autoUpdateVersionsFromGitHub();
     }
 
     // ============================================================================
