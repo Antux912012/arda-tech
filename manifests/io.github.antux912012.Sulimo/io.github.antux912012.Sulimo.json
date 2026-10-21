@@ -1,0 +1,59 @@
+{
+  "app-id": "io.github.antux912012.Sulimo",
+  "runtime": "org.gnome.Platform",
+  "runtime-version": "50",
+  "sdk": "org.gnome.Sdk",
+  "sdk-extensions": [
+    "org.freedesktop.Sdk.Extension.rust-stable"
+  ],
+  "build-options": {
+    "append-path": "/usr/lib/sdk/rust-stable/bin",
+    "build-args": [
+      "--share=network"
+    ]
+  },
+  "command": "sulimo",
+  "finish-args": [
+    "--share=network",
+    "--share=ipc",
+    "--socket=fallback-x11",
+    "--socket=wayland",
+    "--device=dri",
+    "--filesystem=home",
+    "--filesystem=xdg-download",
+    "--filesystem=xdg-documents"
+  ],
+  "cleanup": [
+    "/include",
+    "/lib/pkgconfig",
+    "/man",
+    "/share/doc",
+    "/share/gtk-doc",
+    "/share/man",
+    "/share/pkgconfig",
+    "*.la",
+    "*.a"
+  ],
+  "modules": [
+    {
+      "name": "sulimo",
+      "buildsystem": "simple",
+      "build-commands": [
+        "cargo build --release --locked --bin sulimo --bin sulimo-cli",
+        "install -Dm755 target/release/sulimo /app/bin/sulimo",
+        "install -Dm755 target/release/sulimo-cli /app/bin/sulimo-cli",
+        "ln -sf sulimo-cli /app/bin/arda-probe",
+        "install -Dm644 data/io.github.antux912012.Sulimo.desktop /app/share/applications/io.github.antux912012.Sulimo.desktop",
+        "install -Dm644 data/io.github.antux912012.Sulimo.metainfo.xml /app/share/metainfo/io.github.antux912012.Sulimo.metainfo.xml",
+        "install -Dm644 data/icons/hicolor/scalable/apps/io.github.antux912012.Sulimo.svg /app/share/icons/hicolor/scalable/apps/io.github.antux912012.Sulimo.svg"
+      ],
+      "sources": [
+        {
+          "type": "git",
+          "url": "https://github.com/Antux912012/Sulimo.git",
+          "branch": "main"
+        }
+      ]
+    }
+  ]
+}
