@@ -47,6 +47,7 @@
         "cargo build --release --features gui",
         "install -Dm755 target/release/mithrandir-rs /app/bin/mithrandir-rs",
         "install -Dm644 data/io.github.antonio.MithrandirRS.desktop /app/share/applications/io.github.antonio.MithrandirRS.desktop",
+        "install -Dm644 data/io.github.antonio.MithrandirRS.metainfo.xml /app/share/metainfo/io.github.antonio.MithrandirRS.metainfo.xml",
         "install -Dm644 data/io.github.antonio.MithrandirRS.gschema.xml /app/share/glib-2.0/schemas/io.github.antonio.MithrandirRS.gschema.xml",
         "glib-compile-schemas /app/share/glib-2.0/schemas/",
         "mkdir -p /app/share/icons/hicolor",

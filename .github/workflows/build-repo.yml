@@ -62,6 +62,7 @@ jobs:
           if [ ! -f "repo/config" ]; then
             ostree init --mode=archive-z2 --repo=repo || true
           fi
+          mkdir -p repo/refs/remotes repo/refs/heads repo/refs/mirrors
 
           for manifest in $(find manifests/ -maxdepth 2 \( -name "*.yaml" -o -name "*.yml" -o -name "*.json" \)); do
             echo "=========================================================="
@@ -93,6 +94,7 @@ jobs:
         env:
           GPG_KEY_ID: ${{ secrets.GPG_KEY_ID }}
         run: |
+          mkdir -p repo/refs/remotes repo/refs/heads repo/refs/mirrors
           flatpak build-update-repo \
             --gpg-sign="${GPG_KEY_ID}" \
             --generate-static-deltas \
