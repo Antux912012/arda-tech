@@ -1,0 +1,51 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA512
+
+Architectures: amd64 all
+Codename: sid
+Components: main
+Date: Wed, 21 Oct 2026 15:06:23 +0000
+Description: Official Arda Tech Debian & Ubuntu APT PPA Repository by Antux912012
+Label: Arda Tech Official PPA
+Origin: Arda Tech PPA
+Suite: sid
+MD5Sum:
+ 47825bba17e5f16074f884d014313fcf              239 Release
+ 9ae1201b2798b5c3f330cba7963316c5             9389 main/binary-all/Packages
+ 75f8230835c67b25b97406950904e1f4             3850 main/binary-all/Packages.gz
+ 9ae1201b2798b5c3f330cba7963316c5             9389 main/binary-amd64/Packages
+ 75f8230835c67b25b97406950904e1f4             3850 main/binary-amd64/Packages.gz
+SHA1:
+ 0b022a7d9e3bcd2388ebd0f163c1d05f516bbec1              239 Release
+ 3e334dcbfb1c52f6505e46639df2ae595e683518             9389 main/binary-all/Packages
+ 465b4a9f125a2e78f6437ea00a7acd32ae6cf836             3850 main/binary-all/Packages.gz
+ 3e334dcbfb1c52f6505e46639df2ae595e683518             9389 main/binary-amd64/Packages
+ 465b4a9f125a2e78f6437ea00a7acd32ae6cf836             3850 main/binary-amd64/Packages.gz
+SHA256:
+ 0ef1f8ea5608dc59fda33200f7b67ee462d5929a543995e1c14c4a8dd4dec9d9              239 Release
+ 3e469bcdb3b925d48f98e094789118fda1259e9a64ec1838c357e4dd028dfdef             9389 main/binary-all/Packages
+ 7c3ce2155c4a84d0e1e6d4da9a580cc29032f882d1bcfdd6d2f3b79f21b6462a             3850 main/binary-all/Packages.gz
+ 3e469bcdb3b925d48f98e094789118fda1259e9a64ec1838c357e4dd028dfdef             9389 main/binary-amd64/Packages
+ 7c3ce2155c4a84d0e1e6d4da9a580cc29032f882d1bcfdd6d2f3b79f21b6462a             3850 main/binary-amd64/Packages.gz
+SHA512:
+ e08bfef5c454080ed2c9e4c9dd35aad4b2a67b1a2eb143eb7b53ceca6e1c3215547880160e15e2222bf59eca946b036ffb1a14fa9b818866d5dbad8f2fb1c729              239 Release
+ 9c43e46d071c1b5fbda668bf479d6c15d742c5fb794f6104c747a64d559d2c1a997623e348bcc265d4655bb9107920b8d5ba8ce6c3a4072aebd3c1e99ef26102             9389 main/binary-all/Packages
+ 52308cc525d714baf6df627f771e73064f97610883ae7a535b9947a362b3738a35d889828badc95e03422780a860af2e342a7c834e76c2ff90bbc049cdc37698             3850 main/binary-all/Packages.gz
+ 9c43e46d071c1b5fbda668bf479d6c15d742c5fb794f6104c747a64d559d2c1a997623e348bcc265d4655bb9107920b8d5ba8ce6c3a4072aebd3c1e99ef26102             9389 main/binary-amd64/Packages
+ 52308cc525d714baf6df627f771e73064f97610883ae7a535b9947a362b3738a35d889828badc95e03422780a860af2e342a7c834e76c2ff90bbc049cdc37698             3850 main/binary-amd64/Packages.gz
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEEXvPzob5zvJ72PU152KEm+2tjUU0FAmrY1O8ACgkQ2KEm+2tj
+UU2awg/+MN3JBjwf4yNqctlnLDmdRfdIjRvfWm0o75ugv6KRHifAE2aXiPWYe4Up
+0PHJJgAavpaJJ+NaHXzt53aKxR0dQoPEl27phSFubJpaoT3oh/89z/NFKlpAKPg2
+SsG/R3TNaPtpPI5W6gXvuQ7ay/pT67U4F0iZFsq0jhQ9aCjzkRNerPIN1mP2J3w9
+1gj0urw7xOa/Lr47KwP6h0997oTCUhSH8w0quJnWwf9BDLSNDCoJnCaet5Xt2skR
+mzNisSOEsySQ4qxaaUSJHBVc9zAh89D2aHbpprLrCMj6RL9N2ijBXQPDROCntyhv
+rB4omeSlz2RkRmpfxgh7JKvRE3Soiltd+b4ZwNMEgQCsBY9JdacPI+HBhIBE1W5a
+V6CF5MKxjE3ILzfHL+Lbjz5bAlQr86X/i9Nv3ycoun09HSLbvRUDzTUD1AWRAT8k
+8kbDHlPq36d0PttwCeVMFkDFq2BD6+/CEjsC8kuzUYTMSwNpOXQeHUBgTETd/6l7
+nLCPSHmv3whExOuCTwLffM/dg+OPFbEIB7prvg1n1tKlbq2ipayuB1rf9MJSOgB5
+ABPWwVt44oqKGmr3jQNYJO9vi8qy9XdoG9EipU8Rkwrz72SgG9k8ZWyDMJ/lsiLM
+CH3Y7vedUu/W4yVoH6XvJAUNJxo+eWKgc+wPuCN0N/NdgAl1oyo=
+=VQId
+-----END PGP SIGNATURE-----

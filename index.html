@@ -1,0 +1,1801 @@
+<!DOCTYPE html>
+<html lang="en" class="dark scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arda Tech Flatpak Sanctum | Celebrimbor's OSTree Repository</title>
+  <meta name="description" content="Where Noldorin craftsmanship meets Linux containerization. Official OSTree & Flatpak distribution sanctum for open-source applications forged by Antux912012." />
+
+  <!-- Google Fonts: Cinzel, Cinzel Decorative, Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Cinzel:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Cinzel', '"Cinzel Decorative"', 'serif'],
+            decorative: ['"Cinzel Decorative"', 'Cinzel', 'serif'],
+            sans: ['Inter', 'Cantarell', 'system-ui', '-apple-system', 'sans-serif'],
+            mono: ['"JetBrains Mono"', 'monospace'],
+          },
+          colors: {
+            nord: {
+              darkest: '#181C24',
+              0: '#2E3440', // Polar Night
+              1: '#3B4252',
+              2: '#434C5E',
+              3: '#4C566A',
+              4: '#D8DEE9', // Mithril Silver
+              5: '#E5E9F0',
+              6: '#ECEFF4', // Telperion White
+              7: '#8FBCBB',
+              8: '#88C0D0', // Silmaril Starlight Cyan
+              9: '#81A1C1',
+              10: '#5E81AC',
+              11: '#BF616A',
+              12: '#D08770',
+              13: '#EBCB8B', // Laurelin Pale Gold
+              14: '#A3BE8C', // Lórien Emerald
+              15: '#B48EAD',
+            },
+            arda: {
+              gold: '#D4AF37',
+              laurelin: '#EBCB8B',
+              telperion: '#88C0D0',
+              mithril: '#D8DEE9',
+              obsidian: '#151921',
+              ivory: '#F7F4EB'
+            }
+          },
+          boxShadow: {
+            'silmaril': '0 0 30px -5px rgba(136, 192, 208, 0.35), 0 0 15px -3px rgba(212, 175, 55, 0.25)',
+            'laurelin': '0 0 25px -4px rgba(212, 175, 55, 0.4)',
+            'palantir': '0 25px 60px -15px rgba(0, 0, 0, 0.75), 0 0 25px 1px rgba(136, 192, 208, 0.2)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+    .dark ::-webkit-scrollbar-track {
+      background: #181C24;
+    }
+    .dark ::-webkit-scrollbar-thumb {
+      background: #434C5E;
+      border-radius: 4px;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+    }
+    .dark ::-webkit-scrollbar-thumb:hover {
+      background: #88C0D0;
+    }
+
+    /* Noldorin PCB Circuit + Filigree Background */
+    .bg-elven-circuit {
+      background-size: 48px 48px;
+      background-image:
+        linear-gradient(to right, rgba(136, 192, 208, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(212, 175, 55, 0.04) 1px, transparent 1px);
+    }
+
+    /* Rotating Runic Halo Animation */
+    @keyframes spin-slow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+    @keyframes spin-reverse-slow {
+      from { transform: rotate(360deg); }
+      to { transform: rotate(0deg); }
+    }
+    @keyframes float-silmaril {
+      0%, 100% { transform: translateY(0px); filter: drop-shadow(0 0 16px rgba(136, 192, 208, 0.55)); }
+      50% { transform: translateY(-6px); filter: drop-shadow(0 0 26px rgba(235, 203, 139, 0.75)); }
+    }
+
+    .runic-ring-cw {
+      animation: spin-slow 42s linear infinite;
+      transform-origin: center;
+    }
+    .runic-ring-ccw {
+      animation: spin-reverse-slow 28s linear infinite;
+      transform-origin: center;
+    }
+    .silmaril-core {
+      animation: float-silmaril 6s ease-in-out infinite;
+    }
+
+    /* Doors of Durin / Elven Card Frame Hover Glow */
+    .elven-card {
+      position: relative;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .elven-card:hover {
+      transform: translateY(-4px);
+    }
+  </style>
+</head>
+
+<body class="bg-arda-ivory text-nord-0 dark:bg-arda-obsidian dark:text-nord-6 font-sans antialiased selection:bg-arda-gold selection:text-nord-darkest transition-colors duration-300 min-h-screen flex flex-col relative overflow-x-hidden">
+
+  <!-- Animated Valacirca / Menelmacar Starfield & OSTree Node Canvas -->
+  <canvas id="valinorStarfield" class="fixed inset-0 pointer-events-none z-0 opacity-40 dark:opacity-85"></canvas>
+
+  <!-- TOP NAVIGATION BAR (Noldorin Sanctum Header) -->
+  <header class="sticky top-0 z-40 backdrop-blur-xl bg-arda-ivory/85 dark:bg-arda-obsidian/85 border-b border-arda-gold/30 dark:border-arda-gold/25 transition-colors">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3 flex items-center justify-between gap-4">
+      <!-- Brand Identity -->
+      <a href="#" class="flex items-center gap-3.5 group focus:outline-none">
+        <div class="relative w-11 h-11 rounded-xl bg-nord-0 dark:bg-nord-1 border border-arda-gold/50 flex items-center justify-center shadow-silmaril group-hover:border-nord-8 transition-all">
+          <!-- Mini Star of Fëanor + OSTree Hex Emblem -->
+          <svg class="w-7 h-7" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <polygon points="18,2 32,10 32,26 18,34 4,26 4,10" stroke="#D4AF37" stroke-width="1.5" fill="rgba(136,192,208,0.1)" />
+            <!-- 8-pointed Star of Fëanor -->
+            <path d="M18 4L20.5 15.5L32 18L20.5 20.5L18 32L15.5 20.5L4 18L15.5 15.5L18 4Z" fill="rgba(136,192,208,0.25)" stroke="#88C0D0" stroke-width="1.2"/>
+            <path d="M8 8L16 16M28 8L20 16M8 28L16 20M28 28L20 20" stroke="#EBCB8B" stroke-width="1.1" stroke-linecap="round"/>
+            <circle cx="18" cy="18" r="2.5" fill="#ECEFF4" />
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2.5">
+            <span class="font-display font-bold tracking-wider text-base sm:text-lg text-nord-0 dark:text-nord-6">ARDA TECH</span>
+            <span class="text-[11px] font-mono uppercase px-2 py-0.5 rounded-md bg-arda-gold/15 text-amber-800 dark:text-arda-laurelin border border-arda-gold/40 font-semibold">PPA &amp; Flatpak</span>
+          </div>
+          <p class="text-[11px] font-mono text-nord-3 dark:text-nord-4 hidden sm:block">Celebrimbor's APT PPA &amp; OSTree Sanctum</p>
+        </div>
+      </a>
+
+      <!-- Navigation & Theme Switcher -->
+      <nav class="flex items-center gap-2 sm:gap-5">
+        <a href="#arda-tech-ppa" class="text-xs sm:text-sm font-display font-bold tracking-wide text-amber-700 dark:text-arda-laurelin hover:text-nord-8 transition-colors px-2 py-1">Arda-Tech PPA</a>
+        <a href="#sanctum-catalog" class="text-xs sm:text-sm font-display font-semibold tracking-wide text-nord-1 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors px-2 py-1">Relics &amp; Apps</a>
+        <a href="#wards-of-celebrimbor" class="text-xs sm:text-sm font-display font-semibold tracking-wide text-nord-1 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors px-2 py-1 hidden md:inline-block">GPG Wards</a>
+        <a href="#forges-of-eregion" class="text-xs sm:text-sm font-display font-semibold tracking-wide text-nord-1 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors px-2 py-1 hidden lg:inline-block">CI Forges</a>
+
+        <div class="h-5 w-[1px] bg-arda-gold/30 hidden sm:block"></div>
+
+        <!-- Theme Switcher: Valinor Starlight (Dark) / Minas Tirith Ivory (Light) -->
+        <button
+          id="themeToggleBtn"
+          type="button"
+          class="inline-flex items-center gap-2 px-3 py-2 rounded-xl bg-nord-5/90 dark:bg-nord-1/90 text-nord-0 dark:text-arda-laurelin hover:border-arda-gold border border-arda-gold/30 transition-all text-xs font-mono shadow-sm focus:outline-none focus:ring-2 focus:ring-nord-8"
+          title="Switch between Valinor Starlight (Dark) and Minas Tirith Ivory (Light)"
+        >
+          <!-- Laurelin Gold Sun (Dark Mode) -->
+          <svg id="themeIconSun" class="w-4 h-4 hidden dark:block text-arda-laurelin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="4"></circle>
+            <path stroke-linecap="round" d="M12 2v2m0 16v2M4.93 4.93l1.41 1.41m11.32 11.32l1.41 1.41M2 12h2m16 0h2M4.93 19.07l1.41-1.41m11.32-11.32l1.41-1.41"></path>
+          </svg>
+          <!-- Telperion Silver Crescent (Light Mode) -->
+          <svg id="themeIconMoon" class="w-4 h-4 block dark:hidden text-nord-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"></path>
+          </svg>
+          <span id="themeNameLabel" class="hidden sm:inline">Valinor Starlight</span>
+        </button>
+      </nav>
+    </div>
+  </header>
+
+  <main class="flex-grow relative z-10">
+    <!-- HERO SECTION: THE FORGE OF ARDA TECH -->
+    <section class="relative bg-elven-circuit border-b border-arda-gold/30 pt-10 pb-16 sm:py-20 overflow-hidden">
+      <!-- Dual Ambient Glows: Telperion Cyan & Laurelin Gold -->
+      <div class="pointer-events-none absolute -top-28 left-1/4 w-[480px] h-[300px] bg-nord-8/15 dark:bg-nord-8/12 blur-[120px] rounded-full"></div>
+      <div class="pointer-events-none absolute bottom-0 right-1/4 w-[460px] h-[280px] bg-arda-gold/15 dark:bg-arda-gold/10 blur-[120px] rounded-full"></div>
+
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+        <!-- Doors of Durin / Noldorin Filigree Top Arch Frame -->
+        <div class="flex items-center justify-center mb-8 opacity-80">
+          <svg class="w-full max-w-2xl h-7" viewBox="0 0 600 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M10 14H245L265 4H335L355 14H590" stroke="url(#elvenGradTop)" stroke-width="1.5"/>
+            <path d="M120 20H255L272 10H328L345 20H480" stroke="url(#elvenGradTop)" stroke-width="1" stroke-dasharray="4 3"/>
+            <polygon points="300,2 306,14 300,26 294,14" fill="#D4AF37" stroke="#ECEFF4" stroke-width="1"/>
+            <circle cx="245" cy="14" r="2.5" fill="#88C0D0"/>
+            <circle cx="355" cy="14" r="2.5" fill="#88C0D0"/>
+            <defs>
+              <linearGradient id="elvenGradTop" x1="10" y1="14" x2="590" y2="14" gradientUnits="userSpaceOnUse">
+                <stop offset="0%" stop-color="#88C0D0" stop-opacity="0"/>
+                <stop offset="30%" stop-color="#88C0D0" stop-opacity="0.8"/>
+                <stop offset="50%" stop-color="#D4AF37" stop-opacity="1"/>
+                <stop offset="70%" stop-color="#88C0D0" stop-opacity="0.8"/>
+                <stop offset="100%" stop-color="#88C0D0" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+          </svg>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-center gap-12 lg:gap-14">
+          <!-- Left Column: Hero Emblem + Lore + Actions -->
+          <div class="flex-1 text-center lg:text-left">
+            <!-- Elven Inscription Pill -->
+            <div class="inline-flex items-center gap-2.5 px-4 py-1.5 rounded-full bg-white/80 dark:bg-nord-0/90 border border-arda-gold/40 mb-6 shadow-sm">
+              <span class="w-2 h-2 rounded-full bg-nord-14 animate-ping"></span>
+              <span class="w-2 h-2 rounded-full bg-nord-14 -ml-4"></span>
+              <span class="text-xs font-mono tracking-wide text-nord-1 dark:text-arda-laurelin">
+                PEDO MELLON A MINNO • APT PPA &amp; OSTree archive-z2 • RSA-4096 Signed
+              </span>
+            </div>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-6 mb-6">
+              <!-- Centerpiece Animated SVG: The Silmaril Inside an Isometric Flatpak OSTree Cube with Two Trees Filigree -->
+              <div class="silmaril-core relative shrink-0 w-28 h-28 sm:w-32 sm:h-32 rounded-2xl bg-gradient-to-br from-nord-0 via-nord-1 to-nord-darkest border border-arda-gold/60 flex items-center justify-center shadow-silmaril p-2">
+                <svg class="w-full h-full" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Outer Rotating Tengwar-inspired Geometric Ring -->
+                  <g class="runic-ring-cw">
+                    <circle cx="60" cy="60" r="54" stroke="url(#twoTreesRing)" stroke-width="1.2" stroke-dasharray="8 4 2 4" />
+                    <polygon points="60,3 63,9 57,9" fill="#D4AF37"/>
+                    <polygon points="60,117 63,111 57,111" fill="#88C0D0"/>
+                    <polygon points="3,60 9,63 9,57" fill="#88C0D0"/>
+                    <polygon points="117,60 111,63 111,57" fill="#D4AF37"/>
+                  </g>
+                  <!-- Counter-Rotating Inner Octagram Ring -->
+                  <g class="runic-ring-ccw">
+                    <circle cx="60" cy="60" r="45" stroke="#88C0D0" stroke-width="0.9" stroke-opacity="0.5" stroke-dasharray="3 5" />
+                  </g>
+
+                  <!-- Two Trees Branches (Left: Telperion Silver-Blue, Right: Laurelin Gold) -->
+                  <path d="M22 82 C14 64, 16 40, 32 24" stroke="#88C0D0" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.8"/>
+                  <path d="M98 82 C106 64, 104 40, 88 24" stroke="#EBCB8B" stroke-width="1.6" stroke-linecap="round" fill="none" opacity="0.8"/>
+
+                  <!-- Isometric Flatpak Container Cube -->
+                  <polygon points="60,16 98,38 98,82 60,104 22,82 22,38" fill="rgba(24, 28, 36, 0.85)" stroke="#88C0D0" stroke-width="2.2" />
+                  <path d="M22 38L60 60L98 38" stroke="#D4AF37" stroke-width="1.4" stroke-dasharray="4 2" />
+                  <path d="M60 60V104" stroke="#D4AF37" stroke-width="1.4" stroke-dasharray="4 2" />
+
+                  <!-- The Silmaril Jewel (Faceted Noldorin Octahedron + Star of Fëanor) -->
+                  <polygon points="60,22 80,60 60,98 40,60" fill="url(#silmarilCoreGrad)" stroke="#ECEFF4" stroke-width="1.6" />
+                  <polygon points="28,60 60,42 92,60 60,78" fill="rgba(136, 192, 208, 0.28)" stroke="#EBCB8B" stroke-width="1.3" />
+                  <!-- 8-Pointed Starburst -->
+                  <line x1="60" y1="22" x2="60" y2="98" stroke="#ECEFF4" stroke-width="1.3" />
+                  <line x1="28" y1="60" x2="92" y2="60" stroke="#ECEFF4" stroke-width="1.3" />
+                  <circle cx="60" cy="60" r="6" fill="#ECEFF4" />
+                  <circle cx="60" cy="60" r="3" fill="#88C0D0" />
+
+                  <defs>
+                    <linearGradient id="twoTreesRing" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#88C0D0" />
+                      <stop offset="50%" stop-color="#ECEFF4" />
+                      <stop offset="100%" stop-color="#D4AF37" />
+                    </linearGradient>
+                    <linearGradient id="silmarilCoreGrad" x1="40" y1="22" x2="80" y2="98" gradientUnits="userSpaceOnUse">
+                      <stop offset="0%" stop-color="#88C0D0" stop-opacity="0.85" />
+                      <stop offset="50%" stop-color="#5E81AC" stop-opacity="0.65" />
+                      <stop offset="100%" stop-color="#EBCB8B" stop-opacity="0.85" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+
+              <div>
+                <p class="text-xs font-display uppercase tracking-[0.25em] text-amber-700 dark:text-arda-laurelin font-semibold mb-1">
+                  The Forge of Eregion • APT PPA &amp; Flatpak
+                </p>
+                <h1 class="font-display text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-nord-0 dark:text-nord-6 leading-tight">
+                  Arda Tech <span class="text-transparent bg-clip-text bg-gradient-to-r from-nord-10 via-nord-8 to-amber-600 dark:from-nord-8 dark:via-nord-6 dark:to-arda-laurelin">PPA &amp; Flatpak Sanctum</span>
+                </h1>
+              </div>
+            </div>
+
+            <p class="text-base sm:text-lg text-nord-2 dark:text-nord-4 max-w-2xl mx-auto lg:mx-0 mb-8 leading-relaxed">
+              Where the timeless craftsmanship of the <span class="text-nord-0 dark:text-arda-laurelin font-medium">Noldor</span> meets native <span class="text-nord-10 dark:text-nord-8 font-medium">Debian/Ubuntu APT PPA</span> and <span class="text-nord-10 dark:text-nord-8 font-medium">OSTree Flatpak packaging</span>. Install all 10 GPG-warded vessels forged by <a href="https://github.com/Antux912012" target="_blank" rel="noopener noreferrer" class="font-semibold text-amber-700 dark:text-arda-laurelin underline decoration-arda-gold/60 hover:decoration-arda-gold">@Antux912012</a>—including <strong class="text-nord-0 dark:text-nord-6">Mithrandir</strong>, <strong class="text-nord-0 dark:text-nord-6">Mithrandir-RS</strong>, <strong class="text-nord-0 dark:text-nord-6">Vingilot</strong>, <strong class="text-nord-0 dark:text-nord-6">Imladris</strong>, and the <strong class="text-nord-0 dark:text-nord-6">CachyOS Kernel</strong> forge.
+            </p>
+
+            <!-- Primary & Secondary CTA Buttons -->
+            <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3.5">
+              <a href="#arda-tech-ppa" class="inline-flex items-center gap-2.5 px-5 py-3.5 rounded-xl font-display font-bold tracking-wide text-sm text-nord-darkest bg-gradient-to-r from-arda-laurelin via-arda-gold to-nord-8 hover:brightness-105 active:scale-[0.99] shadow-laurelin transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M8 9l3 3-3 3m5 0h3M5 20h14a2 2 0 002-2V6a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span>Configure Arda-Tech PPA (APT)</span>
+              </a>
+
+              <a href="arda-tech.flatpakrepo" download="arda-tech.flatpakrepo" class="inline-flex items-center gap-2.5 px-5 py-3.5 rounded-xl font-display font-bold tracking-wide text-sm text-nord-darkest bg-gradient-to-r from-nord-8 via-nord-6 to-arda-laurelin hover:brightness-105 active:scale-[0.99] shadow-silmaril transition-all">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                <span>Bind Flatpak Remote (.flatpakrepo)</span>
+              </a>
+
+              <a href="https://github.com/Antux912012/arda-tech-ppa" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-3.5 rounded-xl font-display font-semibold text-sm text-nord-0 dark:text-nord-6 bg-white/90 dark:bg-nord-0/90 hover:border-arda-gold border border-arda-gold/40 transition-all shadow-sm">
+                <svg class="w-5 h-5 text-arda-gold" fill="currentColor" viewBox="0 0 24 24">
+                  <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                </svg>
+                <span>PPA GitHub</span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Right Column: Elven Terminal Grimoire Card -->
+          <div class="w-full lg:w-[510px] xl:w-[550px] shrink-0">
+            <div class="relative rounded-2xl bg-nord-darkest border border-arda-gold/50 shadow-silmaril overflow-hidden">
+              <!-- Corner Elven Filigree Accents -->
+              <svg class="w-5 h-5 text-arda-gold/70 absolute top-1.5 left-1.5 pointer-events-none" viewBox="0 0 24 24" fill="none">
+                <path d="M2 14V2H14" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+              <svg class="w-5 h-5 text-arda-gold/70 absolute top-1.5 right-1.5 pointer-events-none" viewBox="0 0 24 24" fill="none">
+                <path d="M22 14V2H10" stroke="currentColor" stroke-width="1.5"/>
+              </svg>
+
+              <!-- Terminal Headerbar -->
+              <div class="px-5 py-3.5 bg-nord-0 border-b border-arda-gold/30 flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <span class="w-3 h-3 rounded-full bg-nord-11/90"></span>
+                  <span class="w-3 h-3 rounded-full bg-arda-laurelin/90"></span>
+                  <span class="w-3 h-3 rounded-full bg-nord-14/90"></span>
+                  <span class="ml-2 text-xs font-display tracking-wider uppercase text-arda-laurelin font-semibold">
+                    Doors of Durin • CLI Invocation
+                  </span>
+                </div>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-nord-1 text-nord-8 border border-nord-8/30">APT PPA / OSTree</span>
+              </div>
+
+              <!-- Terminal Body -->
+              <div class="p-5 space-y-4">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-mono text-arda-laurelin"># 1. Bind the Arda-Tech PPA (Debian / Ubuntu / Mint)</span>
+                    <button
+                      type="button"
+                      onclick="copyText('curl -fsSL https://antux912012.github.io/arda-tech-ppa/setup.sh | sudo bash', this)"
+                      class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-lg bg-nord-1 hover:bg-nord-2 text-arda-laurelin border border-arda-gold/40 transition-colors focus:outline-none"
+                    >
+                      <span class="copy-label">Copy PPA</span>
+                    </button>
+                  </div>
+                  <div class="p-3 rounded-xl bg-[#11141B] border border-nord-2/80 font-mono text-xs sm:text-sm text-nord-6 overflow-x-auto leading-relaxed select-all">
+                    <span class="text-arda-laurelin select-none">λ </span>curl -fsSL <span class="text-nord-8">https://antux912012.github.io/arda-tech-ppa/setup.sh</span> | sudo bash
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-mono text-nord-4"># 2. Or bind the Arda-Tech Flatpak Remote</span>
+                    <button
+                      type="button"
+                      onclick="copyText('flatpak remote-add --if-not-exists arda-tech https://Antux912012.github.io/arda-tech/arda-tech.flatpakrepo', this)"
+                      class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-lg bg-nord-1 hover:bg-nord-2 text-arda-laurelin border border-arda-gold/40 transition-colors focus:outline-none"
+                    >
+                      <span class="copy-label">Copy Flatpak</span>
+                    </button>
+                  </div>
+                  <div class="p-3 rounded-xl bg-[#11141B] border border-nord-2/60 font-mono text-xs text-nord-4 overflow-x-auto select-all">
+                    <span class="text-nord-14 select-none">λ </span>flatpak remote-add --if-not-exists arda-tech \<br/>
+                    &nbsp;&nbsp;<span class="text-nord-8">https://Antux912012.github.io/arda-tech/arda-tech.flatpakrepo</span>
+                  </div>
+                </div>
+
+                <div>
+                  <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-xs font-mono text-nord-4"># 3. Summon any vessel via APT or Flatpak</span>
+                  </div>
+                  <div class="p-3 rounded-xl bg-[#11141B] border border-nord-2/60 font-mono text-xs text-nord-4 overflow-x-auto">
+                    <span class="text-nord-14 select-none">λ </span>sudo apt install <span class="text-arda-laurelin">mithrandir mithrandir-rs vingilot imladris</span>
+                  </div>
+                </div>
+
+                <div class="pt-2 border-t border-nord-2/60 flex flex-wrap items-center justify-between gap-2 text-xs text-nord-4">
+                  <span class="flex items-center gap-1.5">
+                    <svg class="w-4 h-4 text-arda-laurelin" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                    4096-Bit RSA GPG Seal (`CF9DC18F75B6C72B`)
+                  </span>
+                  <span class="font-mono text-[11px] text-nord-8">APT • GNOME Software • Discover</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ARDA-TECH PPA SECTION (DEBIAN & UBUNTU APT REPOSITORY CONFIGURATION) -->
+    <section id="arda-tech-ppa" class="py-14 bg-white/80 dark:bg-nord-0/75 border-b border-arda-gold/30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-8">
+          <div>
+            <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-amber-700 dark:text-arda-laurelin font-semibold mb-2">
+              <span class="w-2 h-2 rounded-full bg-nord-14"></span>
+              Official Debian &amp; Ubuntu APT PPA • Signed InRelease
+            </div>
+            <h2 class="font-display text-2xl sm:text-3xl font-bold text-nord-0 dark:text-nord-6">
+              Arda-Tech PPA Configuration (<code class="font-mono text-lg sm:text-2xl text-nord-10 dark:text-nord-8">arda-tech-ppa</code>)
+            </h2>
+            <p class="text-sm sm:text-base text-nord-2 dark:text-nord-4 mt-2 max-w-3xl">
+              Install and receive automatic system updates for all 10 Arda Tech applications on <strong>Debian</strong> (<code class="font-mono text-xs">bookworm</code>, <code class="font-mono text-xs">trixie</code>, <code class="font-mono text-xs">sid</code>), <strong>Ubuntu</strong> (<code class="font-mono text-xs">noble</code>, <code class="font-mono text-xs">jammy</code>), <strong>Linux Mint</strong>, and <strong>Pop!_OS</strong>.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <a href="https://antux912012.github.io/arda-tech-ppa" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-display font-bold bg-arda-gold text-nord-darkest hover:brightness-110 transition-all shadow-sm">
+              <span>Open Dedicated PPA Portal ↗</span>
+            </a>
+            <a href="https://github.com/Antux912012/arda-tech-ppa" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-semibold bg-arda-ivory dark:bg-nord-1 text-nord-0 dark:text-arda-laurelin border border-arda-gold/40 hover:border-arda-gold transition-colors">
+              <span>GitHub: Antux912012/arda-tech-ppa</span>
+            </a>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <!-- Method 1: One-Line Automatic Script -->
+          <div class="p-6 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/45 shadow-silmaril flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-display font-bold uppercase tracking-wider text-amber-800 dark:text-arda-laurelin">
+                  ⚡ Option 1: One-Line Automatic Setup (Recommended)
+                </span>
+                <button
+                  type="button"
+                  onclick="copyText('curl -fsSL https://antux912012.github.io/arda-tech-ppa/setup.sh | sudo bash', this)"
+                  class="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-lg bg-white dark:bg-nord-1 hover:bg-nord-2 text-nord-0 dark:text-arda-laurelin border border-arda-gold/40 transition-colors"
+                >
+                  <span class="copy-label">Copy 1-Liner</span>
+                </button>
+              </div>
+              <p class="text-xs sm:text-sm text-nord-2 dark:text-nord-4 mb-4">
+                Automatically installs the 4096-bit RSA GPG key to <code class="font-mono text-xs">/etc/apt/keyrings/arda-tech.gpg</code>, registers <code class="font-mono text-xs">/etc/apt/sources.list.d/arda-tech.list</code>, and refreshes your APT package index:
+              </p>
+            </div>
+            <pre class="p-4 rounded-xl bg-[#11141B] border border-nord-2 font-mono text-xs sm:text-sm text-nord-8 overflow-x-auto select-all leading-relaxed"><span class="text-arda-laurelin select-none">$ </span>curl -fsSL https://antux912012.github.io/arda-tech-ppa/setup.sh | sudo bash</pre>
+          </div>
+
+          <!-- Method 2: Step-by-Step Manual APT Setup -->
+          <div class="p-6 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/45 shadow-silmaril flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-xs font-display font-bold uppercase tracking-wider text-nord-10 dark:text-nord-8">
+                  🔧 Option 2: Manual Step-by-Step APT Configuration
+                </span>
+                <button
+                  type="button"
+                  onclick="copyText('sudo mkdir -p /etc/apt/keyrings\ncurl -fsSL https://antux912012.github.io/arda-tech-ppa/KEY.gpg | sudo tee /etc/apt/keyrings/arda-tech.gpg >/dev/null\necho &quot;deb [signed-by=/etc/apt/keyrings/arda-tech.gpg] https://antux912012.github.io/arda-tech-ppa stable main&quot; | sudo tee /etc/apt/sources.list.d/arda-tech.list\nsudo apt update', this)"
+                  class="inline-flex items-center gap-1.5 text-xs font-mono px-3 py-1 rounded-lg bg-white dark:bg-nord-1 hover:bg-nord-2 text-nord-0 dark:text-arda-laurelin border border-arda-gold/40 transition-colors"
+                >
+                  <span class="copy-label">Copy Commands</span>
+                </button>
+              </div>
+              <p class="text-xs sm:text-sm text-nord-2 dark:text-nord-4 mb-3">
+                Standard Debian/Ubuntu keyring configuration without <code class="font-mono text-xs">apt-key</code> deprecation warnings:
+              </p>
+            </div>
+            <pre class="p-3.5 rounded-xl bg-[#11141B] border border-nord-2 font-mono text-xs text-nord-6 overflow-x-auto leading-relaxed select-all">sudo mkdir -p /etc/apt/keyrings
+curl -fsSL https://antux912012.github.io/arda-tech-ppa/KEY.gpg | sudo tee /etc/apt/keyrings/arda-tech.gpg &gt;/dev/null
+echo "deb [signed-by=/etc/apt/keyrings/arda-tech.gpg] https://antux912012.github.io/arda-tech-ppa stable main" | sudo tee /etc/apt/sources.list.d/arda-tech.list
+sudo apt update</pre>
+          </div>
+        </div>
+
+        <!-- Install All Packages Banner -->
+        <div class="p-5 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/40 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+          <div class="space-y-1">
+            <div class="flex flex-wrap items-center gap-2">
+              <span class="text-xs font-display font-bold uppercase tracking-wider text-nord-0 dark:text-arda-laurelin">Install Any or All 10 Packages via APT</span>
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-nord-14/15 text-nord-14 border border-nord-14/30">Suites: stable • bookworm • trixie • sid • noble • jammy</span>
+            </div>
+            <div class="font-mono text-xs text-nord-2 dark:text-nord-4 break-all">
+              sudo apt install <span class="text-nord-10 dark:text-nord-8 font-semibold">mithrandir mithrandir-rs vingilot vingilot-estel imladris cachy-kernel-updater yt-comment-extractor yt-comment-extractor-service sulimo vfs5011-linux-fix</span>
+            </div>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5 shrink-0">
+            <button
+              type="button"
+              onclick="copyText('sudo apt install mithrandir mithrandir-rs vingilot vingilot-estel imladris cachy-kernel-updater yt-comment-extractor yt-comment-extractor-service sulimo vfs5011-linux-fix', this)"
+              class="px-4 py-2 rounded-xl text-xs font-mono font-bold bg-nord-8 text-nord-darkest hover:bg-arda-laurelin transition-colors"
+            >
+              <span class="copy-label">Copy Install All</span>
+            </button>
+            <a href="KEY.gpg" download="KEY.gpg" class="px-3.5 py-2 rounded-xl text-xs font-mono bg-white dark:bg-nord-1 text-nord-0 dark:text-arda-laurelin border border-arda-gold/35 hover:border-arda-gold transition-colors">
+              KEY.gpg
+            </a>
+            <a href="KEY.asc" download="KEY.asc" class="px-3.5 py-2 rounded-xl text-xs font-mono bg-white dark:bg-nord-1 text-nord-0 dark:text-arda-laurelin border border-arda-gold/35 hover:border-arda-gold transition-colors">
+              KEY.asc
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- STAR OF FËANOR DIVIDER -->
+    <div class="max-w-5xl mx-auto px-6 py-4 flex items-center justify-center gap-4 opacity-85">
+      <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-arda-gold/60 to-nord-8"></div>
+      <svg class="w-7 h-7 text-arda-gold shrink-0" viewBox="0 0 32 32" fill="none">
+        <path d="M16 2L18.5 13.5L30 16L18.5 18.5L16 30L13.5 18.5L2 16L13.5 13.5L16 2Z" stroke="currentColor" stroke-width="1.5" fill="rgba(212,175,55,0.2)"/>
+        <path d="M6 6L26 26M26 6L6 26" stroke="#88C0D0" stroke-width="1.2"/>
+        <circle cx="16" cy="16" r="2.5" fill="#ECEFF4"/>
+      </svg>
+      <div class="h-[1px] flex-1 bg-gradient-to-l from-transparent via-arda-gold/60 to-nord-8"></div>
+    </div>
+
+    <!-- APPLICATION CATALOG SECTION ("VESSELS & RELICS OF ARDA TECH") -->
+    <section id="sanctum-catalog" class="py-12 sm:py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-8 gap-5">
+        <div>
+          <div class="flex flex-wrap items-center gap-3 mb-2">
+            <h2 class="font-display text-2xl sm:text-3xl font-bold tracking-wide text-nord-0 dark:text-nord-6">
+              Vessels &amp; Relics of the Sanctum
+            </h2>
+            <span id="catalogSourceBadge" class="text-xs font-mono px-3 py-1 rounded-full bg-white dark:bg-nord-1 text-amber-700 dark:text-arda-laurelin border border-arda-gold/40 shadow-sm">
+              Awakening catalog...
+            </span>
+          </div>
+          <p class="text-sm sm:text-base text-nord-2 dark:text-nord-4">
+            Real application icons resolved automatically from <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-nord-5 dark:bg-nord-1">@Antux912012</code> GitHub repositories &amp; AppStream metadata.
+          </p>
+        </div>
+
+        <!-- Search & Live GitHub Sync Controls -->
+        <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <button
+            id="liveGithubSyncBtn"
+            type="button"
+            onclick="syncLiveFromGitHub()"
+            class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs font-mono font-semibold bg-white dark:bg-nord-1 hover:border-nord-8 text-nord-0 dark:text-nord-8 border border-arda-gold/40 shadow-sm transition-all"
+            title="Fetch live repository stars, release tags, and real icon paths from GitHub API"
+          >
+            <svg id="syncSpinnerIcon" class="w-4 h-4 text-arda-gold" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span id="syncBtnLabel">Sync Live from GitHub (@Antux912012)</span>
+          </button>
+
+          <!-- Search Input -->
+          <div class="relative w-full sm:w-72">
+            <svg class="w-4 h-4 text-arda-gold absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="11" cy="11" r="8"></circle>
+              <path stroke-linecap="round" d="M21 21l-4.35-4.35"></path>
+            </svg>
+            <input
+              id="appSearchInput"
+              type="search"
+              placeholder="Search relics, IDs, or lore..."
+              class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-nord-1 text-sm text-nord-0 dark:text-nord-6 placeholder-nord-3 dark:placeholder-nord-4 border border-arda-gold/40 focus:outline-none focus:ring-2 focus:ring-nord-8 transition-all"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex items-center gap-2.5 overflow-x-auto pb-3 mb-8 no-scrollbar" id="categoryPillsContainer" role="tablist">
+        <button type="button" data-category="All" class="category-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-display font-bold tracking-wide transition-all bg-gradient-to-r from-nord-8 to-arda-laurelin text-nord-darkest shadow-sm">
+          All Relics
+        </button>
+        <button type="button" data-category="Network" class="category-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-display font-semibold tracking-wide transition-all bg-white dark:bg-nord-1 text-nord-1 dark:text-nord-4 hover:border-arda-gold border border-arda-gold/30">
+          Network (Vingilot)
+        </button>
+        <button type="button" data-category="Development" class="category-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-display font-semibold tracking-wide transition-all bg-white dark:bg-nord-1 text-nord-1 dark:text-nord-4 hover:border-arda-gold border border-arda-gold/30">
+          Development (Mithrandir)
+        </button>
+        <button type="button" data-category="System" class="category-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-display font-semibold tracking-wide transition-all bg-white dark:bg-nord-1 text-nord-1 dark:text-nord-4 hover:border-arda-gold border border-arda-gold/30">
+          System (CachyOS Kernel)
+        </button>
+        <button type="button" data-category="Utility" class="category-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-display font-semibold tracking-wide transition-all bg-white dark:bg-nord-1 text-nord-1 dark:text-nord-4 hover:border-arda-gold border border-arda-gold/30">
+          Utility
+        </button>
+      </div>
+
+      <!-- Application Cards Grid -->
+      <div id="appsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
+        <!-- Populated dynamically by JavaScript -->
+      </div>
+
+      <!-- Empty Search State -->
+      <div id="emptyCatalogState" class="hidden text-center py-16 px-4 rounded-2xl bg-white/60 dark:bg-nord-1/50 border border-dashed border-arda-gold/50">
+        <p class="font-display text-lg font-bold text-nord-0 dark:text-nord-6 mb-1">No Relics Found in the Archives</p>
+        <p class="text-sm text-nord-3 dark:text-nord-4 mb-4">No Flatpak vessels matched your query. Clear your search or select "All Relics".</p>
+        <button type="button" onclick="resetCatalogFilters()" class="px-5 py-2.5 rounded-xl text-xs font-display font-bold bg-nord-8 text-nord-darkest hover:bg-arda-laurelin transition-colors">
+          Restore All Relics
+        </button>
+      </div>
+    </section>
+
+    <!-- SECURITY & CRYPTOGRAPHIC WARDS SECTION -->
+    <section id="wards-of-celebrimbor" class="py-16 bg-white/70 dark:bg-nord-0/65 border-y border-arda-gold/30">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="max-w-3xl mb-10">
+          <div class="inline-flex items-center gap-2 text-xs font-mono uppercase tracking-widest text-amber-700 dark:text-arda-laurelin font-semibold mb-2">
+            <svg class="w-4 h-4 text-nord-14" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+            Wards of Celebrimbor • Cryptographic Integrity
+          </div>
+          <h2 class="font-display text-2xl sm:text-3xl font-bold text-nord-0 dark:text-nord-6 mb-3">
+            Sealed with 4096-Bit Mithril GPG &amp; OSTree Static Deltas
+          </h2>
+          <p class="text-sm sm:text-base text-nord-2 dark:text-nord-4 leading-relaxed">
+            Every OSTree commit and repository summary in <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-nord-5 dark:bg-nord-1">arda-tech</code> is signed inside an isolated container forge before publication, guaranteeing untampered delivery from GitHub Pages to your Linux desktop.
+          </p>
+        </div>
+
+        <!-- Three Pillar Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 mb-10">
+          <div class="p-5 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/35 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-nord-8/15 border border-nord-8/40 text-nord-10 dark:text-nord-8 flex items-center justify-center shrink-0 font-mono font-bold text-sm">
+              z2
+            </div>
+            <div>
+              <div class="text-xs font-mono text-nord-3 dark:text-nord-4">OSTree Repository Mode</div>
+              <div class="text-sm font-display font-bold text-nord-0 dark:text-nord-6">archive-z2 Content-Addressed</div>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/35 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-nord-14/15 border border-nord-14/40 text-nord-14 flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs font-mono text-nord-3 dark:text-nord-4">Binary Diff Transport</div>
+              <div class="text-sm font-display font-bold text-nord-0 dark:text-nord-6">Static Deltas Enabled</div>
+            </div>
+          </div>
+
+          <div class="p-5 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/35 flex items-center gap-4 shadow-sm">
+            <div class="w-12 h-12 rounded-xl bg-arda-gold/15 border border-arda-gold/40 text-amber-700 dark:text-arda-laurelin flex items-center justify-center shrink-0">
+              <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+            </div>
+            <div>
+              <div class="text-xs font-mono text-nord-3 dark:text-nord-4">Cryptographic Ward</div>
+              <div class="text-sm font-display font-bold text-nord-0 dark:text-nord-6">RSA-4096 GPG Signed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Two Column Verification Details -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="p-6 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/40 flex flex-col justify-between">
+            <div>
+              <h3 class="font-display text-lg font-bold text-nord-0 dark:text-nord-6 mb-2">The Public Seal (`arda-tech.gpg`)</h3>
+              <p class="text-sm text-nord-2 dark:text-nord-4 mb-4 leading-relaxed">
+                While <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-nord-5 dark:bg-nord-1">arda-tech.flatpakrepo</code> automatically imports the base64-encoded GPG key when adding the remote, you may also download the binary public seal directly for manual keyring inspection.
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center gap-3 pt-2">
+              <a href="arda-tech.gpg" download="arda-tech.gpg" class="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-display font-bold bg-arda-gold text-nord-darkest hover:brightness-110 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                </svg>
+                <span>Download GPG Seal (arda-tech.gpg)</span>
+              </a>
+              <a href="arda-tech.flatpakrepo" class="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-mono text-nord-10 dark:text-nord-8 bg-white dark:bg-nord-1 border border-arda-gold/30 hover:border-arda-gold transition-colors">
+                Inspect .flatpakrepo
+              </a>
+            </div>
+          </div>
+
+          <div class="p-6 rounded-2xl bg-arda-ivory dark:bg-nord-darkest border border-arda-gold/40 flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <h3 class="font-display text-lg font-bold text-nord-0 dark:text-nord-6">Verify OSTree Commit Lineage</h3>
+                <button
+                  type="button"
+                  onclick="copyText('flatpak remote-info --log arda-tech io.github.antux912012.Vingilot', this)"
+                  class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-lg bg-white dark:bg-nord-1 text-nord-1 dark:text-arda-laurelin border border-arda-gold/40 transition-colors"
+                >
+                  <span class="copy-label">Copy Verify Cmd</span>
+                </button>
+              </div>
+              <p class="text-sm text-nord-2 dark:text-nord-4 mb-4">
+                Inspect the signed OSTree commit log and verify the cryptographic signature of any vessel in the repository:
+              </p>
+            </div>
+            <div class="p-3.5 rounded-xl bg-nord-darkest border border-nord-2 font-mono text-xs sm:text-sm text-nord-6 overflow-x-auto">
+              <span class="text-arda-laurelin select-none">λ </span>flatpak remote-info --log arda-tech <span class="text-nord-8">&lt;APP_ID&gt;</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CI ARCHITECTURE SECTION ("THE AUTOMATED FORGES OF EREGION") -->
+    <section id="forges-of-eregion" class="py-14 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="p-6 sm:p-8 rounded-2xl bg-white dark:bg-nord-0/90 border border-arda-gold/40 shadow-silmaril">
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+          <div class="max-w-2xl">
+            <span class="text-xs font-mono uppercase tracking-widest text-nord-14 font-semibold">The Automated Forges of Eregion • CI/CD</span>
+            <h3 class="font-display text-xl sm:text-2xl font-bold text-nord-0 dark:text-nord-6 mt-1 mb-2">
+              Cross-Repository <code class="font-mono text-nord-10 dark:text-nord-8">repository_dispatch</code> Pipeline
+            </h3>
+            <p class="text-sm text-nord-2 dark:text-nord-4 leading-relaxed">
+              Whenever a new release tag is forged in <strong class="text-nord-0 dark:text-nord-6">Vingilot</strong>, <strong class="text-nord-0 dark:text-nord-6">Mithrandir</strong>, or <strong class="text-nord-0 dark:text-nord-6">Debian Cachy Kernel Updater</strong>, a webhook awakens the <code class="font-mono text-xs px-1.5 py-0.5 rounded bg-nord-5 dark:bg-nord-1">freedesktop-25.08</code> build container. It compiles the manifest via <code class="font-mono text-xs">flatpak-builder</code>, prunes and signs static deltas with <code class="font-mono text-xs">flatpak build-update-repo</code>, and publishes <code class="font-mono text-xs">apps.json</code> + <code class="font-mono text-xs">.flatpakref</code> descriptors to GitHub Pages.
+            </p>
+          </div>
+
+          <div class="flex flex-col sm:flex-row lg:flex-col gap-3 shrink-0">
+            <a href="https://github.com/Antux912012/arda-tech/actions" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2.5 px-5 py-3 rounded-xl text-xs sm:text-sm font-display font-bold bg-nord-darkest text-arda-laurelin border border-arda-gold/50 hover:border-nord-8 transition-colors">
+              <span class="w-2 h-2 rounded-full bg-nord-14"></span>
+              <span>Inspect Forge Logs (GitHub Actions)</span>
+            </a>
+            <a href="https://docs.flatpak.org/en/latest/hosting-a-repository.html" target="_blank" rel="noopener noreferrer" class="inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-mono text-nord-2 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors">
+              <span>Flatpak OSTree Specification ↗</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="relative z-10 border-t border-arda-gold/30 bg-white/80 dark:bg-nord-darkest py-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-3">
+        <div class="w-8 h-8 rounded-lg bg-nord-0 border border-arda-gold/50 flex items-center justify-center">
+          <span class="text-arda-laurelin font-display text-xs font-bold">AT</span>
+        </div>
+        <div>
+          <span class="text-xs sm:text-sm text-nord-2 dark:text-nord-4 block">
+            Forged by <a href="https://github.com/Antux912012" target="_blank" rel="noopener noreferrer" class="font-semibold text-nord-0 dark:text-arda-laurelin hover:underline">Antux912012</a> • Hosted on GitHub Pages
+          </span>
+          <span class="text-[11px] font-mono text-nord-3 dark:text-nord-4">
+            "Elen síla lúmenn' omentielvo" — A star shines on the hour of our meeting
+          </span>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm font-mono">
+        <a href="arda-tech.flatpakrepo" class="text-nord-2 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors">arda-tech.flatpakrepo</a>
+        <a href="arda-tech.gpg" class="text-nord-2 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors">arda-tech.gpg</a>
+        <a href="apps.json" class="text-nord-2 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors">apps.json</a>
+        <a href="https://github.com/Antux912012/arda-tech" target="_blank" rel="noopener noreferrer" class="text-nord-2 dark:text-nord-4 hover:text-amber-700 dark:hover:text-arda-laurelin transition-colors">GitHub Sanctum</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- PALANTÍR PACKAGE INSPECTOR MODAL -->
+  <div id="appDetailsModal" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/80 backdrop-blur-md" role="dialog" aria-modal="true" aria-labelledby="modalAppName">
+    <div class="relative w-full max-w-2xl rounded-2xl bg-arda-ivory dark:bg-nord-darkest border-2 border-arda-gold/60 shadow-palantir overflow-hidden">
+      <!-- Modal Headerbar -->
+      <div class="px-6 py-4 bg-white dark:bg-nord-0 border-b border-arda-gold/35 flex items-center justify-between">
+        <div class="flex items-center gap-3.5">
+          <div id="modalAppIconContainer" class="w-12 h-12 rounded-xl bg-nord-0 border border-arda-gold/50 flex items-center justify-center overflow-hidden shrink-0"></div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] font-mono uppercase tracking-widest px-2 py-0.5 rounded bg-arda-gold/20 text-amber-800 dark:text-arda-laurelin border border-arda-gold/40">Palantír Inspector</span>
+              <span id="modalAppCategory" class="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-nord-8/15 text-nord-8">Category</span>
+            </div>
+            <h3 id="modalAppName" class="font-display text-lg sm:text-xl font-bold text-nord-0 dark:text-nord-6 mt-0.5">Application Name</h3>
+            <p id="modalAppId" class="text-xs font-mono text-nord-3 dark:text-nord-4">io.github.antux912012.App</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeAppModal()" aria-label="Close Palantír modal" class="p-2 rounded-xl text-nord-3 dark:text-nord-4 hover:bg-nord-4/30 dark:hover:bg-nord-2 hover:text-nord-0 dark:hover:text-nord-6 transition-colors">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Modal Content -->
+      <div class="p-6 space-y-5 max-h-[80vh] overflow-y-auto">
+        <p id="modalAppDescription" class="text-sm text-nord-1 dark:text-nord-4 leading-relaxed"></p>
+
+        <!-- Runtime & OSTree Metadata Grid -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3 rounded-xl bg-white dark:bg-nord-0 border border-arda-gold/30">
+            <span class="text-[10px] uppercase font-mono text-nord-3 dark:text-nord-4 block">OSTree Branch</span>
+            <span id="modalAppBranch" class="text-xs sm:text-sm font-mono font-bold text-nord-14">stable</span>
+          </div>
+          <div class="p-3 rounded-xl bg-white dark:bg-nord-0 border border-arda-gold/30">
+            <span class="text-[10px] uppercase font-mono text-nord-3 dark:text-nord-4 block">Architecture</span>
+            <span id="modalAppArch" class="text-xs sm:text-sm font-mono font-bold text-nord-8">x86_64</span>
+          </div>
+          <div class="p-3 rounded-xl bg-white dark:bg-nord-0 border border-arda-gold/30 col-span-2">
+            <span class="text-[10px] uppercase font-mono text-nord-3 dark:text-nord-4 block">Flatpak Runtime</span>
+            <span id="modalAppRuntime" class="text-xs sm:text-sm font-mono font-semibold text-nord-0 dark:text-nord-6">org.gnome.Platform//47</span>
+          </div>
+        </div>
+
+        <!-- Sandbox Permissions / Finish-Args Badges -->
+        <div>
+          <span class="text-xs font-mono uppercase tracking-wider text-nord-3 dark:text-arda-laurelin block mb-2">Sandbox Wards &amp; Finish-Args Permissions</span>
+          <div id="modalPermissionsList" class="flex flex-wrap gap-1.5"></div>
+        </div>
+
+        <!-- Option 1: One-Click GUI Install -->
+        <div class="p-4 rounded-xl bg-white dark:bg-nord-0 border border-arda-gold/35">
+          <div class="flex items-center justify-between gap-2 mb-1.5">
+            <span class="text-xs font-display font-bold uppercase tracking-wide text-amber-800 dark:text-arda-laurelin">Option 1: One-Click GUI Software Center (.flatpakref)</span>
+            <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-nord-14/15 text-nord-14">GNOME Software / Discover</span>
+          </div>
+          <p class="text-xs text-nord-2 dark:text-nord-4 mb-3 leading-relaxed">
+            Downloads the declarative <code class="font-mono">.flatpakref</code> descriptor with the embedded <code class="font-mono">arda-tech</code> remote URL and GPG key.
+          </p>
+          <div class="flex flex-wrap items-center gap-3">
+            <a id="modalFlatpakrefBtn" href="#" download class="inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-display font-bold bg-gradient-to-r from-nord-8 to-arda-laurelin text-nord-darkest hover:brightness-105 transition-all">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+              </svg>
+              <span>Install via .flatpakref</span>
+            </a>
+            <a id="modalGithubBtn" href="#" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-mono font-semibold bg-arda-ivory dark:bg-nord-1 text-nord-1 dark:text-nord-4 hover:text-nord-0 dark:hover:text-nord-6 border border-arda-gold/35 transition-colors">
+              <span>Inspect GitHub Source ↗</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Option 2: Terminal CLI Installation & Execution -->
+        <div class="p-4 rounded-xl bg-[#11141B] border border-arda-gold/40">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-xs font-mono text-arda-laurelin">Option 2: Terminal CLI Invocation</span>
+            <button
+              id="modalCopyCliBtn"
+              type="button"
+              class="inline-flex items-center gap-1.5 text-xs font-mono px-2.5 py-1 rounded-lg bg-nord-1 hover:bg-nord-2 text-nord-6 border border-arda-gold/40 transition-colors"
+            >
+              <span class="copy-label">Copy Commands</span>
+            </button>
+          </div>
+          <pre id="modalCliCode" class="font-mono text-xs text-nord-6 overflow-x-auto leading-relaxed"></pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APPLICATION SCRIPTS: REAL ICON RESOLUTION, GITHUB TREE DISCOVERY & STARFIELD -->
+  <script>
+    // ============================================================================
+    // 1. HIGH-DETAIL AUTHENTIC SVG EMBLEMS (Used while loading or if offline)
+    //    Crafted specifically for Vingilot, Mithrandir, and Debian Cachy Kernel Updater
+    // ============================================================================
+    function createSvgDataUri(svgString) {
+      return 'data:image/svg+xml;utf8,' + encodeURIComponent(svgString.trim());
+    }
+
+    const REALISTIC_SVG_EMBLEMS = {
+      vingilot: createSvgDataUri(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+          <defs>
+            <linearGradient id="vgBg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#1B2436"/>
+              <stop offset="50%" stop-color="#243B55"/>
+              <stop offset="100%" stop-color="#141E30"/>
+            </linearGradient>
+            <linearGradient id="vgSail" x1="40" y1="20" x2="90" y2="85" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#ECEFF4"/>
+              <stop offset="60%" stop-color="#88C0D0"/>
+              <stop offset="100%" stop-color="#5E81AC"/>
+            </linearGradient>
+            <linearGradient id="vgHull" x1="20" y1="80" x2="108" y2="105" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#EBCB8B"/>
+              <stop offset="50%" stop-color="#D4AF37"/>
+              <stop offset="100%" stop-color="#8FBCBB"/>
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="28" fill="url(#vgBg)" stroke="#D4AF37" stroke-width="3"/>
+          <circle cx="64" cy="64" r="50" stroke="#88C0D0" stroke-width="1" stroke-opacity="0.35" stroke-dasharray="4 4"/>
+          <!-- Starlight Sail of Vingilot -->
+          <path d="M62 20 C86 34, 92 60, 78 82 L48 82 C56 60, 56 38, 62 20 Z" fill="url(#vgSail)" stroke="#ECEFF4" stroke-width="1.5"/>
+          <!-- Star of Eärendil / Silmaril on the Sail -->
+          <path d="M66 36 L68.5 46.5 L79 49 L68.5 51.5 L66 62 L63.5 51.5 L53 49 L63.5 46.5 Z" fill="#ECEFF4"/>
+          <!-- Elven Swan-Prowed Ship Hull -->
+          <path d="M22 78 C32 98, 92 98, 106 72 C102 64, 96 64, 94 70 C86 84, 42 84, 28 74 Z" fill="url(#vgHull)" stroke="#ECEFF4" stroke-width="1.5"/>
+          <!-- Celestial Waves -->
+          <path d="M24 102 Q44 96, 64 102 T104 102" stroke="#88C0D0" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      `),
+
+      mithrandir: createSvgDataUri(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+          <defs>
+            <linearGradient id="mtBg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#1F1C2C"/>
+              <stop offset="100%" stop-color="#2E3440"/>
+            </linearGradient>
+            <radialGradient id="mtCrystal" cx="50%" cy="38%" r="35%">
+              <stop offset="0%" stop-color="#ECEFF4"/>
+              <stop offset="50%" stop-color="#88C0D0"/>
+              <stop offset="100%" stop-color="#5E81AC" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+          <rect width="128" height="128" rx="28" fill="url(#mtBg)" stroke="#88C0D0" stroke-width="3"/>
+          <!-- Istari Halo & Terminal Brackets -->
+          <circle cx="64" cy="48" r="32" fill="url(#mtCrystal)"/>
+          <path d="M30 48 L20 58 L30 68" stroke="#88C0D0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M98 48 L108 58 L98 68" stroke="#88C0D0" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Crowned Staff of Mithrandir -->
+          <path d="M64 114 V62" stroke="#D4AF37" stroke-width="5" stroke-linecap="round"/>
+          <path d="M64 64 C46 56, 46 32, 64 20 C82 32, 82 56, 64 64 Z" stroke="#EBCB8B" stroke-width="3.2" fill="rgba(136,192,208,0.2)"/>
+          <path d="M54 58 C48 44, 54 28, 64 24 C74 28, 80 44, 74 58" stroke="#ECEFF4" stroke-width="1.8" fill="none"/>
+          <!-- Glowing Silmaril Crystal in Staff Crown -->
+          <polygon points="64,28 73,43 64,56 55,43" fill="#ECEFF4" stroke="#88C0D0" stroke-width="1.5"/>
+        </svg>
+      `),
+
+      cachy: createSvgDataUri(`
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" fill="none">
+          <defs>
+            <linearGradient id="ckBg" x1="0" y1="0" x2="128" y2="128" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#142026"/>
+              <stop offset="50%" stop-color="#1B3038"/>
+              <stop offset="100%" stop-color="#1E242B"/>
+            </linearGradient>
+            <linearGradient id="cachyCyan" x1="20" y1="20" x2="100" y2="100" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#00F5D4"/>
+              <stop offset="50%" stop-color="#88C0D0"/>
+              <stop offset="100%" stop-color="#A3BE8C"/>
+            </linearGradient>
+            <linearGradient id="debianRed" x1="30" y1="30" x2="95" y2="95" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#DF2935"/>
+              <stop offset="100%" stop-color="#BF616A"/>
+            </linearGradient>
+          </defs>
+          <rect width="128" height="128" rx="28" fill="url(#ckBg)" stroke="#A3BE8C" stroke-width="3"/>
+          <!-- CachyOS Geometric Hexagon Shield -->
+          <polygon points="64,14 106,38 106,86 64,110 22,86 22,38" fill="rgba(163,190,140,0.1)" stroke="url(#cachyCyan)" stroke-width="3"/>
+          <!-- Debian Swirl + CachyOS Core Fusion -->
+          <path d="M74 42 C54 32, 34 48, 40 68 C45 84, 68 92, 82 80 C92 70, 88 52, 74 48 C62 44, 52 54, 56 64 C59 71, 69 72, 73 66" stroke="url(#debianRed)" stroke-width="6.5" stroke-linecap="round" fill="none"/>
+          <!-- Kernel Upgrade Arrow & Lightning Bolt -->
+          <path d="M64 24 L76 38 H68 V54 H60 V38 H52 L64 24 Z" fill="#EBCB8B" stroke="#142026" stroke-width="1.5"/>
+          <circle cx="64" cy="96" r="4" fill="#00F5D4"/>
+        </svg>
+      `)
+    };
+
+    // ============================================================================
+    // 2. CURATED CATALOG WITH MULTI-SOURCE REAL GITHUB ICON CANDIDATES
+    // ============================================================================
+    const FALLBACK_CATALOG = [
+      {
+        id: 'io.github.antux912012.Vingilot',
+        repoName: 'vingilot',
+        name: 'Vingilot',
+        category: 'Network',
+        badge: 'GTK4 • Libadwaita • WebKitGTK',
+        summary: 'Eärendil’s star-vessel reborn as a privacy-first, native GTK4 & Libadwaita web browser for Wayland desktops.',
+        description: 'Vingilot is a fast, distraction-free GNOME web browser engineered with GTK4, Libadwaita, and WebKitGTK. Named after the sacred ship of Eärendil that bore the Silmaril across the firmament, it features hardware-accelerated Wayland rendering, strict Flatpak sandbox isolation, and built-in ad/tracker warding.',
+        version: 'stable',
+        arch: 'x86_64',
+        runtime: 'org.gnome.Platform//47',
+        flatpakref: 'refs/io.github.antux912012.Vingilot.flatpakref',
+        cliInstall: 'flatpak install arda-tech io.github.antux912012.Vingilot',
+        repoUrl: 'https://github.com/Antux912012/vingilot',
+        permissions: ['--share=network', '--share=ipc', '--socket=wayland', '--socket=fallback-x11', '--device=dri'],
+        iconCandidates: [
+          'repo/appstream/x86_64/icons/128x128/io.github.antux912012.Vingilot.png',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/main/data/icons/hicolor/scalable/apps/io.github.antux912012.Vingilot.svg',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/main/data/icons/io.github.antux912012.Vingilot.svg',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/main/assets/icon.svg',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/main/assets/logo.svg',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/main/assets/icon.png',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/main/icon.svg',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/main/icon.png',
+          'https://raw.githubusercontent.com/Antux912012/vingilot/master/data/icons/hicolor/scalable/apps/io.github.antux912012.Vingilot.svg',
+          REALISTIC_SVG_EMBLEMS.vingilot
+        ]
+      },
+      {
+        id: 'io.github.antux912012.Mithrandir',
+        repoName: 'mithrandir',
+        name: 'Mithrandir',
+        category: 'Development',
+        badge: 'Istari Dev Assistant • CLI/GUI',
+        summary: 'Intelligent Linux developer assistant, repository orchestrator, and system automation staff.',
+        description: 'Mithrandir counsels your development workflow with automated project diagnostics, Flatpak/container build orchestration, and local AI-assisted code tooling for modern Linux workstations.',
+        version: 'stable',
+        arch: 'x86_64',
+        runtime: 'org.freedesktop.Platform//24.08',
+        flatpakref: 'refs/io.github.antux912012.Mithrandir.flatpakref',
+        cliInstall: 'flatpak install arda-tech io.github.antux912012.Mithrandir',
+        repoUrl: 'https://github.com/Antux912012/mithrandir',
+        permissions: ['--share=network', '--socket=wayland', '--filesystem=host:ro', '--talk-name=org.freedesktop.Flatpak'],
+        iconCandidates: [
+          'repo/appstream/x86_64/icons/128x128/io.github.antux912012.Mithrandir.png',
+          'https://raw.githubusercontent.com/Antux912012/mithrandir/main/data/icons/hicolor/scalable/apps/io.github.antux912012.Mithrandir.svg',
+          'https://raw.githubusercontent.com/Antux912012/mithrandir/main/assets/icon.svg',
+          'https://raw.githubusercontent.com/Antux912012/mithrandir/main/assets/logo.svg',
+          'https://raw.githubusercontent.com/Antux912012/mithrandir/main/assets/icon.png',
+          'https://raw.githubusercontent.com/Antux912012/mithrandir/main/icon.svg',
+          'https://raw.githubusercontent.com/Antux912012/mithrandir/main/icon.png',
+          'https://raw.githubusercontent.com/Antux912012/mithrandir/master/icon.png',
+          REALISTIC_SVG_EMBLEMS.mithrandir
+        ]
+      },
+      {
+        id: 'io.github.antux912012.CachyKernelUpdater',
+        repoName: 'debian-cachy-kernel-updater',
+        name: 'Debian Cachy Kernel Updater',
+        category: 'System',
+        badge: 'CachyOS BORE • Debian Kernel Forge',
+        summary: 'Automated graphical & CLI forge to fetch, tune, compile, and install CachyOS BORE kernels on Debian.',
+        description: 'Brings the responsiveness of CachyOS BORE-scheduler and LTO-optimized Linux kernels to Debian and Ubuntu-based distributions. Automates fetching upstream kernel sources, applying CachyOS performance patches, building .deb packages via bindeb-pkg, and managing installed kernel versions safely.',
+        version: 'stable',
+        arch: 'x86_64',
+        runtime: 'org.gnome.Platform//47',
+        flatpakref: 'refs/io.github.antux912012.CachyKernelUpdater.flatpakref',
+        cliInstall: 'flatpak install arda-tech io.github.antux912012.CachyKernelUpdater',
+        repoUrl: 'https://github.com/Antux912012/debian-cachy-kernel-updater',
+        permissions: ['--share=network', '--socket=wayland', '--socket=fallback-x11', '--talk-name=org.freedesktop.Flatpak'],
+        iconCandidates: [
+          'repo/appstream/x86_64/icons/128x128/io.github.antux912012.CachyKernelUpdater.png',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/main/data/icons/hicolor/scalable/apps/io.github.antux912012.CachyKernelUpdater.svg',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/main/assets/icon.svg',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/main/assets/icon.png',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/main/assets/logo.png',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/main/icon.svg',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/main/icon.png',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/main/logo.png',
+          'https://raw.githubusercontent.com/Antux912012/debian-cachy-kernel-updater/master/icon.png',
+          REALISTIC_SVG_EMBLEMS.cachy
+        ]
+      }
+    ];
+
+    let allApps = [...FALLBACK_CATALOG];
+    let activeCategory = 'All';
+    let searchQuery = '';
+    // Map of appId -> resolved working icon URL
+    const resolvedIconCache = {};
+
+    function getFallbackEmblemForApp(appId) {
+      const lower = (appId || '').toLowerCase();
+      if (lower.includes('vingilot')) return REALISTIC_SVG_EMBLEMS.vingilot;
+      if (lower.includes('mithrandir')) return REALISTIC_SVG_EMBLEMS.mithrandir;
+      return REALISTIC_SVG_EMBLEMS.cachy;
+    }
+
+    // Build candidate icon URLs for any app (including dynamically loaded apps from apps.json)
+    function buildIconCandidateList(app) {
+      const list = [];
+      if (resolvedIconCache[app.id]) list.push(resolvedIconCache[app.id]);
+      if (app.icon) list.push(app.icon);
+      if (Array.isArray(app.iconCandidates)) list.push(...app.iconCandidates);
+
+      const repoUrl = app.repoUrl || app.github || '';
+      const repoMatch = repoUrl.match(/github\.com\/([^/]+\/[^/]+)/i);
+      if (repoMatch) {
+        const slug = repoMatch[1].replace(/\.git$/, '');
+        list.push(
+          `repo/appstream/x86_64/icons/128x128/${app.id}.png`,
+          `https://raw.githubusercontent.com/${slug}/main/data/icons/hicolor/scalable/apps/${app.id}.svg`,
+          `https://raw.githubusercontent.com/${slug}/main/assets/icon.svg`,
+          `https://raw.githubusercontent.com/${slug}/main/assets/icon.png`,
+          `https://raw.githubusercontent.com/${slug}/main/icon.svg`,
+          `https://raw.githubusercontent.com/${slug}/main/icon.png`,
+          `https://raw.githubusercontent.com/${slug}/main/logo.png`
+        );
+      }
+      list.push(getFallbackEmblemForApp(app.id));
+      // Deduplicate while preserving order
+      return [...new Set(list)];
+    }
+
+    // Multi-path image error handler that steps through candidate URLs seamlessly
+    window.handleAppIconError = function(imgEl) {
+      try {
+        const candidates = JSON.parse(decodeURIComponent(imgEl.dataset.candidates || '[]'));
+        let idx = parseInt(imgEl.dataset.idx || '0', 10) + 1;
+        if (idx < candidates.length) {
+          imgEl.dataset.idx = String(idx);
+          imgEl.src = candidates[idx];
+        }
+      } catch (e) {
+        imgEl.src = REALISTIC_SVG_EMBLEMS.vingilot;
+      }
+    };
+
+    window.handleAppIconLoad = function(imgEl, appId) {
+      if (imgEl.src && !imgEl.src.startsWith('data:image/svg+xml')) {
+        resolvedIconCache[appId] = imgEl.src;
+      }
+    };
+
+    // ============================================================================
+    // 3. BACKGROUND GITHUB TREE ICON DISCOVERY
+    //    Queries GitHub API tree for each repo to locate real .svg/.png icons
+    //    even if stored in custom subdirectories (e.g., src/assets/,pixmaps/,etc.)
+    // ============================================================================
+    async function discoverRealIconsFromGitHubTrees() {
+      for (const app of allApps) {
+        const repoUrl = app.repoUrl || app.github || '';
+        const match = repoUrl.match(/github\.com\/([^/]+\/[^/]+)/i);
+        if (!match) continue;
+        const repoSlug = match[1].replace(/\.git$/, '');
+
+        try {
+          const res = await fetch(`https://api.github.com/repos/${repoSlug}/git/trees/HEAD?recursive=1`);
+          if (!res.ok) continue;
+          const treeData = await res.json();
+          if (!Array.isArray(treeData.tree)) continue;
+
+          // Find best icon file in repository tree
+          const iconFiles = treeData.tree.filter(item =>
+            item.type === 'blob' &&
+            /\.(svg|png)$/i.test(item.path) &&
+            /(icon|logo|app|vingilot|mithrandir|cachy|hicolor|pixmaps)/i.test(item.path) &&
+            !/(screenshot|banner|window|preview)/i.test(item.path)
+          );
+
+          if (iconFiles.length > 0) {
+            // Prioritize scalable SVG or 128x128/256x256 PNG
+            iconFiles.sort((a, b) => {
+              const score = (p) =>
+                (p.endsWith('.svg') ? 20 : 10) +
+                (p.includes('hicolor') || p.includes('icons') ? 15 : 0) +
+                (/(^|\/)(icon|logo)\.(svg|png)$/i.test(p) ? 12 : 0);
+              return score(b.path) - score(a.path);
+            });
+
+            const bestPath = iconFiles[0].path;
+            const rawIconUrl = `https://raw.githubusercontent.com/${repoSlug}/HEAD/${bestPath}`;
+            resolvedIconCache[app.id] = rawIconUrl;
+
+            // Update any rendered <img> for this app immediately
+            document.querySelectorAll(`img[data-app-id="${app.id}"]`).forEach(img => {
+              img.src = rawIconUrl;
+            });
+          }
+        } catch (err) {
+          // Silently keep existing candidate resolution if rate-limited or offline
+        }
+      }
+    }
+
+    // ============================================================================
+    // 3b. AUTOMATIC GITHUB RELEASE VERSION UPDATER
+    // ============================================================================
+    const VERSION_CACHE_TTL_MS = 15 * 60 * 1000; // 15-minute cache to respect GitHub API rate limits
+
+    async function autoUpdateVersionsFromGitHub(options = {}) {
+      const force = options.force || false;
+      let updatedCount = 0;
+
+      for (const app of allApps) {
+        const repoUrl = app.repoUrl || app.github || '';
+        const match = repoUrl.match(/github\.com\/([^/]+\/[^/]+)/i);
+        if (!match) continue;
+        const repoSlug = match[1].replace(/\.git$/, '');
+
+        const cacheKey = `arda_ver_cache_${repoSlug.replace('/', '_')}`;
+        let cached = null;
+
+        if (!force) {
+          try {
+            const rawCache = sessionStorage.getItem(cacheKey);
+            if (rawCache) {
+              const parsed = JSON.parse(rawCache);
+              if (Date.now() - parsed.timestamp < VERSION_CACHE_TTL_MS) {
+                cached = parsed;
+              }
+            }
+          } catch (_) {}
+        }
+
+        let latestReleaseInfo = cached;
+
+        if (!latestReleaseInfo) {
+          try {
+            const res = await fetch(`https://api.github.com/repos/${repoSlug}/releases?per_page=5`);
+            if (res.status === 403) {
+              console.warn(`[Arda Tech] GitHub API rate-limited for ${repoSlug}. Using catalog version.`);
+              break;
+            }
+            if (res.ok) {
+              const releasesData = await res.json();
+              if (Array.isArray(releasesData) && releasesData.length > 0) {
+                // Find latest non-draft release, sorted by publication date
+                const sorted = [...releasesData].filter(r => !r.draft).sort((a, b) => {
+                  return new Date(b.published_at || b.created_at) - new Date(a.published_at || a.created_at);
+                });
+
+                // Handle sub-projects sharing a repo (e.g. vingilot-estel)
+                let rel = sorted[0];
+                if (app.aptPackage === 'vingilot-estel') {
+                  rel = sorted.find(r => {
+                    const title = ((r.name || '') + ' ' + (r.tag_name || '')).toLowerCase();
+                    const hasEstelAsset = (r.assets || []).some(a => (a.name || '').toLowerCase().includes('estel'));
+                    return title.includes('estel') || hasEstelAsset;
+                  });
+                }
+
+                if (rel) {
+                  latestReleaseInfo = {
+                    tagName: rel.tag_name,
+                    htmlUrl: rel.html_url,
+                    assets: (rel.assets || []).map(a => ({
+                      name: a.name,
+                      browser_download_url: a.browser_download_url
+                    })),
+                    timestamp: Date.now()
+                  };
+                }
+              }
+            }
+
+            // Fallback to tags if releases API returned no items
+            if (!latestReleaseInfo) {
+              const tagsRes = await fetch(`https://api.github.com/repos/${repoSlug}/tags?per_page=10`);
+              if (tagsRes.ok) {
+                const tagsData = await tagsRes.json();
+                if (Array.isArray(tagsData) && tagsData.length > 0) {
+                  let tag = tagsData[0];
+                  if (app.aptPackage === 'vingilot-estel') {
+                    tag = tagsData.find(t => (t.name || '').toLowerCase().includes('estel'));
+                  }
+                  if (tag) {
+                    latestReleaseInfo = {
+                      tagName: tag.name,
+                      htmlUrl: `${repoUrl}/releases/tag/${tag.name}`,
+                      assets: [],
+                      timestamp: Date.now()
+                    };
+                  }
+                }
+              }
+            }
+
+            if (latestReleaseInfo) {
+              try {
+                sessionStorage.setItem(cacheKey, JSON.stringify(latestReleaseInfo));
+              } catch (_) {}
+            }
+          } catch (err) {
+            console.debug(`[Arda Tech] Version check skipped for ${repoSlug}:`, err.message);
+            continue;
+          }
+        }
+
+        if (latestReleaseInfo && latestReleaseInfo.tagName) {
+          const rawTag = latestReleaseInfo.tagName;
+          const cleanTag = rawTag.replace(/^v/i, '').trim();
+          const currentVer = (app.version || '').trim();
+
+          // Only update if cleanTag is valid and not already matching
+          const isDifferent = cleanTag && currentVer !== cleanTag && !currentVer.startsWith(cleanTag + '-');
+
+          if (isDifferent) {
+            app.version = cleanTag;
+            app.lastReleaseUrl = latestReleaseInfo.htmlUrl;
+            updatedCount++;
+
+            // Update matching deb asset URL if available in release
+            if (app.aptPackage && latestReleaseInfo.assets) {
+              const matchingDeb = latestReleaseInfo.assets.find(a =>
+                a.name.startsWith(`${app.aptPackage}_`) && a.name.endsWith('.deb')
+              );
+              if (matchingDeb) {
+                app.releaseDebUrl = matchingDeb.browser_download_url;
+              }
+            }
+
+            // Dynamically update DOM badge on the card
+            document.querySelectorAll(`[data-app-version="${app.id}"]`).forEach(el => {
+              el.textContent = cleanTag;
+              el.title = `Live from GitHub release: ${rawTag}`;
+              el.classList.add('text-amber-400');
+            });
+
+            // If modal is open for this app, update modal text
+            const modalAppIdElem = document.getElementById('modalAppId');
+            if (modalAppIdElem && modalAppIdElem.textContent.includes(app.id)) {
+              const modalBranchElem = document.getElementById('modalAppBranch');
+              if (modalBranchElem) modalBranchElem.textContent = cleanTag;
+            }
+          }
+        }
+      }
+
+      if (updatedCount > 0) {
+        console.log(`[Arda Tech] Auto-updated ${updatedCount} app version(s) from GitHub releases.`);
+        const badge = document.getElementById('catalogSourceBadge');
+        if (badge) {
+          badge.textContent = `${allApps.length} Relics • Live Updated from GitHub Releases`;
+        }
+      }
+    }
+    window.autoUpdateVersionsFromGitHub = autoUpdateVersionsFromGitHub;
+
+    // ============================================================================
+    // 4. LIVE GITHUB REPOSITORY SYNC (@Antux912012)
+    // ============================================================================
+    async function syncLiveFromGitHub() {
+      const btnLabel = document.getElementById('syncBtnLabel');
+      const spinner = document.getElementById('syncSpinnerIcon');
+      const badge = document.getElementById('catalogSourceBadge');
+
+      btnLabel.textContent = 'Consulting Palantír (GitHub API)...';
+      spinner.classList.add('animate-spin');
+
+      try {
+        const res = await fetch('https://api.github.com/users/Antux912012/repos?per_page=100&sort=updated');
+        if (!res.ok) throw new Error('GitHub API status ' + res.status);
+        const repos = await res.json();
+
+        if (Array.isArray(repos)) {
+          allApps = allApps.map(app => {
+            const matchRepo = repos.find(r =>
+              r.html_url.toLowerCase() === (app.repoUrl || app.github || '').toLowerCase() ||
+              r.name.toLowerCase() === (app.repoName || '').toLowerCase() ||
+              app.id.toLowerCase().includes(r.name.toLowerCase().replace(/-/g, ''))
+            );
+            if (matchRepo) {
+              return {
+                ...app,
+                stars: matchRepo.stargazers_count,
+                updatedAt: new Date(matchRepo.updated_at).toLocaleDateString(),
+                summary: matchRepo.description || app.summary,
+                repoUrl: matchRepo.html_url
+              };
+            }
+            return app;
+          });
+
+          await discoverRealIconsFromGitHubTrees();
+          await autoUpdateVersionsFromGitHub({ force: true });
+          renderCatalog();
+          badge.textContent = `${allApps.length} Relics • Synced Live with @Antux912012`;
+          btnLabel.textContent = 'Synced with GitHub!';
+        }
+      } catch (err) {
+        btnLabel.textContent = 'GitHub API Rate-Limited (Using Local Lore)';
+      } finally {
+        spinner.classList.remove('animate-spin');
+        setTimeout(() => {
+          btnLabel.textContent = 'Sync Live from GitHub (@Antux912012)';
+        }, 3200);
+      }
+    }
+
+    // ============================================================================
+    // 5. RENDER CATALOG CARDS
+    // ============================================================================
+    function renderCatalog() {
+      const grid = document.getElementById('appsGrid');
+      const emptyState = document.getElementById('emptyCatalogState');
+
+      const filtered = allApps.filter(app => {
+        const catNorm = (app.category || 'Utility').toLowerCase();
+        const activeNorm = activeCategory.toLowerCase();
+        const matchesCat = activeCategory === 'All' || catNorm.includes(activeNorm);
+
+        const q = searchQuery.trim().toLowerCase();
+        const matchesSearch = !q ||
+          (app.name || '').toLowerCase().includes(q) ||
+          (app.id || '').toLowerCase().includes(q) ||
+          (app.summary || '').toLowerCase().includes(q) ||
+          (app.badge || '').toLowerCase().includes(q);
+        return matchesCat && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      grid.innerHTML = filtered.map(app => {
+        const safeApt = app.aptInstall || (app.aptPackage ? `sudo apt install ${app.aptPackage}` : '');
+        const safeCli = app.cliInstall || (app.flatpakref ? `flatpak install arda-tech ${app.id}` : '');
+        const sourceLink = app.repoUrl || app.github || 'https://github.com/Antux912012';
+        const candidates = buildIconCandidateList(app);
+        const encodedCandidates = encodeURIComponent(JSON.stringify(candidates));
+
+        return `
+          <article class="elven-card group rounded-2xl bg-white/95 dark:bg-nord-0/90 border border-arda-gold/40 hover:border-nord-8 shadow-silmaril flex flex-col justify-between p-6 relative overflow-hidden">
+            <!-- Subtle Top Elven Filigree Accent Bar -->
+            <div class="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-nord-8 via-arda-gold to-nord-14 opacity-75 group-hover:opacity-100 transition-opacity"></div>
+
+            <div>
+              <!-- Card Header: Real App Icon + Title + App ID -->
+              <div class="flex items-start justify-between gap-3.5 mb-4">
+                <div class="flex items-center gap-3.5">
+                  <div class="relative w-14 h-14 rounded-2xl bg-nord-darkest border border-arda-gold/50 flex items-center justify-center shrink-0 shadow-md overflow-hidden p-1.5 group-hover:border-nord-8 transition-colors">
+                    <img
+                      src="${candidates[0]}"
+                      alt="${app.name} Icon"
+                      data-app-id="${app.id}"
+                      data-idx="0"
+                      data-candidates="${encodedCandidates}"
+                      onerror="handleAppIconError(this)"
+                      onload="handleAppIconLoad(this, '${app.id}')"
+                      class="w-full h-full object-contain rounded-xl transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <h3 class="font-display text-lg font-bold text-nord-0 dark:text-nord-6 leading-snug group-hover:text-amber-700 dark:group-hover:text-arda-laurelin transition-colors">
+                        ${app.name}
+                      </h3>
+                      ${typeof app.stars === 'number' ? `
+                        <span class="inline-flex items-center gap-0.5 text-[11px] font-mono px-1.5 py-0.5 rounded bg-arda-gold/20 text-arda-laurelin border border-arda-gold/40">
+                          ★ ${app.stars}
+                        </span>
+                      ` : ''}
+                    </div>
+                    <span class="text-xs font-mono text-nord-3 dark:text-nord-4 break-all">${app.aptPackage ? `apt: ${app.aptPackage} • ` : ''}${app.id}</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Toolkit & Realm Category Badges -->
+              <div class="flex flex-wrap items-center gap-2 mb-3.5">
+                <span class="text-[11px] font-mono font-semibold px-2.5 py-0.5 rounded-md bg-nord-8/15 text-nord-10 dark:text-nord-8 border border-nord-8/30">
+                  ${app.badge || (app.runtime ? app.runtime : 'Arda-Tech Vessel')}
+                </span>
+                <span class="text-[11px] font-display font-semibold px-2.5 py-0.5 rounded-md bg-arda-gold/15 text-amber-800 dark:text-arda-laurelin border border-arda-gold/35">
+                  ${app.category || 'Utility'}
+                </span>
+              </div>
+
+              <!-- Summary Lore -->
+              <p class="text-sm text-nord-2 dark:text-nord-4 leading-relaxed mb-5">
+                ${app.summary}
+              </p>
+            </div>
+
+            <div class="space-y-2.5 pt-3.5 border-t border-arda-gold/25">
+              <!-- Version & Runtime Metadata -->
+              <div class="flex items-center justify-between text-xs font-mono text-nord-3 dark:text-nord-4">
+                <span>Version: <strong class="text-nord-14 transition-colors duration-300" data-app-version="${app.id}">${app.version || app.branch || 'stable'}</strong></span>
+                <span>Arch: <strong class="text-nord-0 dark:text-nord-5">${app.arch || 'amd64'}</strong></span>
+              </div>
+
+              ${safeApt ? `
+              <!-- Copyable APT PPA Install Box -->
+              <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-nord-darkest text-nord-6 border border-arda-gold/40 font-mono text-xs">
+                <div class="truncate select-all">
+                  <span class="text-arda-laurelin select-none">APT </span>${safeApt}
+                </div>
+                <button
+                  type="button"
+                  onclick="copyText('${safeApt}', this)"
+                  class="shrink-0 px-2.5 py-1 rounded-lg bg-nord-1 hover:bg-nord-2 text-arda-laurelin border border-arda-gold/35 transition-colors text-[11px]"
+                  title="Copy APT PPA install command"
+                >
+                  <span class="copy-label">Copy APT</span>
+                </button>
+              </div>
+              ` : ''}
+
+              ${safeCli ? `
+              <!-- Copyable Flatpak CLI Install Box -->
+              <div class="flex items-center justify-between gap-2 p-2.5 rounded-xl bg-nord-darkest text-nord-6 border border-nord-8/30 font-mono text-xs">
+                <div class="truncate select-all">
+                  <span class="text-nord-8 select-none">FPK </span>${safeCli}
+                </div>
+                <button
+                  type="button"
+                  onclick="copyText('${safeCli}', this)"
+                  class="shrink-0 px-2.5 py-1 rounded-lg bg-nord-1 hover:bg-nord-2 text-nord-8 border border-nord-8/35 transition-colors text-[11px]"
+                  title="Copy Flatpak CLI install command"
+                >
+                  <span class="copy-label">Copy Flatpak</span>
+                </button>
+              </div>
+              ` : ''}
+
+              <!-- Action Buttons -->
+              <div class="flex items-center gap-2 pt-1">
+                ${app.debUrl ? `
+                <a
+                  href="${app.debUrl}"
+                  download
+                  class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-display font-bold tracking-wide bg-gradient-to-r from-arda-laurelin to-arda-gold text-nord-darkest hover:brightness-105 transition-all shadow-sm"
+                  title="Download standalone Debian/Ubuntu package (.deb)"
+                >
+                  <span>.deb</span>
+                </a>
+                ` : ''}
+
+                ${app.flatpakref ? `
+                <a
+                  href="${app.flatpakref}"
+                  download
+                  class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl text-xs font-display font-bold tracking-wide bg-gradient-to-r from-nord-8 to-arda-laurelin text-nord-darkest hover:brightness-105 transition-all shadow-sm"
+                  title="Install via Flatpak (.flatpakref)"
+                >
+                  <span>.flatpakref</span>
+                </a>
+                ` : ''}
+
+                <button
+                  type="button"
+                  onclick="openAppModal('${app.id}')"
+                  class="px-3.5 py-2.5 rounded-xl text-xs font-display font-semibold bg-arda-ivory dark:bg-nord-1 hover:border-arda-gold text-nord-0 dark:text-arda-laurelin border border-arda-gold/35 transition-colors"
+                  title="Gaze into the Palantír Package Inspector"
+                >
+                  Palantír
+                </button>
+
+                <a
+                  href="${sourceLink}"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="${app.name} GitHub Source"
+                  class="p-2.5 rounded-xl bg-arda-ivory dark:bg-nord-1 hover:border-arda-gold text-nord-1 dark:text-nord-4 border border-arda-gold/35 transition-colors"
+                  title="View GitHub Source Repository"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
+                  </svg>
+                </a>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join('');
+    }
+
+    // ============================================================================
+    // 6. LOAD ./apps.json FROM CI BUILD (Supports both Array and { apps: [...] })
+    // ============================================================================
+    async function loadCatalogData() {
+      const badge = document.getElementById('catalogSourceBadge');
+      try {
+        const response = await fetch('./apps.json', { cache: 'no-store' });
+        if (!response.ok) throw new Error('apps.json not present yet');
+        const payload = await response.json();
+        const incomingApps = Array.isArray(payload) ? payload : (Array.isArray(payload.apps) ? payload.apps : []);
+
+        if (incomingApps.length > 0) {
+          // Merge with FALLBACK_CATALOG so rich icon candidates and lore are preserved
+          allApps = incomingApps.map(item => {
+            const preset = FALLBACK_CATALOG.find(f =>
+              f.id.toLowerCase() === (item.id || '').toLowerCase() ||
+              (item.name && f.name.toLowerCase() === item.name.toLowerCase())
+            );
+            return preset ? { ...preset, ...item, iconCandidates: preset.iconCandidates } : item;
+          });
+          badge.textContent = `${allApps.length} Relics • APT PPA & Flatpak`;
+        } else {
+          throw new Error('Empty apps.json');
+        }
+      } catch (err) {
+        allApps = [...FALLBACK_CATALOG];
+        badge.textContent = `${allApps.length} Relics • Sanctum Archive`;
+      }
+
+      renderCatalog();
+      // Automatically resolve real icons from GitHub repository trees in the background
+      discoverRealIconsFromGitHubTrees();
+      // Automatically update app versions from latest GitHub releases in the background
+      autoUpdateVersionsFromGitHub();
+    }
+
+    // ============================================================================
+    // 7. PALANTÍR MODAL INSPECTOR & CLIPBOARD HELPERS
+    // ============================================================================
+    function openAppModal(appId) {
+      const app = allApps.find(a => a.id === appId);
+      if (!app) return;
+
+      const candidates = buildIconCandidateList(app);
+      const encodedCandidates = encodeURIComponent(JSON.stringify(candidates));
+      document.getElementById('modalAppIconContainer').innerHTML = `
+        <img
+          src="${candidates[0]}"
+          alt="${app.name} Icon"
+          data-app-id="${app.id}"
+          data-idx="0"
+          data-candidates="${encodedCandidates}"
+          onerror="handleAppIconError(this)"
+          class="w-full h-full object-contain p-1"
+        />
+      `;
+
+      document.getElementById('modalAppName').textContent = app.name;
+      document.getElementById('modalAppId').textContent = app.aptPackage ? `${app.id} (apt: ${app.aptPackage})` : app.id;
+      document.getElementById('modalAppCategory').textContent = app.category || 'Utility';
+      document.getElementById('modalAppDescription').textContent = app.description || app.summary;
+      document.getElementById('modalAppBranch').textContent = app.version || app.branch || 'stable';
+      document.getElementById('modalAppArch').textContent = app.arch || 'x86_64';
+      document.getElementById('modalAppRuntime').textContent = app.runtime || 'org.gnome.Platform//50';
+
+      const perms = Array.isArray(app.permissions) && app.permissions.length > 0
+        ? app.permissions
+        : ['--share=ipc', '--socket=wayland', '--socket=fallback-x11'];
+      document.getElementById('modalPermissionsList').innerHTML = perms.map(p => `
+        <span class="text-xs font-mono px-2.5 py-1 rounded-lg bg-white dark:bg-nord-0 text-nord-10 dark:text-nord-8 border border-arda-gold/30">
+          ${p}
+        </span>
+      `).join('');
+
+      const refBtn = document.getElementById('modalFlatpakrefBtn');
+      if (app.flatpakref) {
+        refBtn.href = app.flatpakref;
+        refBtn.setAttribute('download', app.flatpakref.split('/').pop());
+        refBtn.innerHTML = '<span>Install via .flatpakref</span>';
+      } else if (app.debUrl) {
+        refBtn.href = app.debUrl;
+        refBtn.setAttribute('download', app.debUrl.split('/').pop());
+        refBtn.innerHTML = '<span>Download .deb Package</span>';
+      }
+
+      document.getElementById('modalGithubBtn').href = app.repoUrl || app.github || 'https://github.com/Antux912012';
+
+      const aptSection = app.aptInstall
+        ? `# Option A: Install via Arda-Tech APT PPA (Debian / Ubuntu / Mint)\ncurl -fsSL https://antux912012.github.io/arda-tech-ppa/setup.sh | sudo bash\n${app.aptInstall}\n\n`
+        : '';
+      const flatpakSection = app.flatpakref
+        ? `# Option B: Install via Arda-Tech Flatpak OSTree Remote\nflatpak remote-add --if-not-exists arda-tech https://Antux912012.github.io/arda-tech/arda-tech.flatpakrepo\n${app.cliInstall || `flatpak install arda-tech ${app.id}`}\nflatpak run ${app.id}`
+        : '';
+      const fullCliBlock = (aptSection + flatpakSection).trim();
+      document.getElementById('modalCliCode').textContent = fullCliBlock;
+
+      const copyBtn = document.getElementById('modalCopyCliBtn');
+      copyBtn.onclick = () => copyText(fullCliBlock, copyBtn);
+
+      const modal = document.getElementById('appDetailsModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+    }
+
+    function closeAppModal() {
+      const modal = document.getElementById('appDetailsModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+    }
+
+    function copyText(text, buttonEl) {
+      const triggerFeedback = () => {
+        if (!buttonEl) return;
+        const labelSpan = buttonEl.querySelector('.copy-label') || buttonEl;
+        const originalText = labelSpan.dataset.originalText || labelSpan.textContent;
+        labelSpan.dataset.originalText = originalText;
+        labelSpan.textContent = 'Runes Copied!';
+        buttonEl.classList.add('border-nord-14', 'text-nord-14');
+
+        setTimeout(() => {
+          labelSpan.textContent = originalText;
+          buttonEl.classList.remove('border-nord-14', 'text-nord-14');
+        }, 1800);
+      };
+
+      if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(triggerFeedback).catch(() => {
+          fallbackCopy(text);
+          triggerFeedback();
+        });
+      } else {
+        fallbackCopy(text);
+        triggerFeedback();
+      }
+    }
+
+    function fallbackCopy(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      textarea.style.position = 'fixed';
+      textarea.style.opacity = '0';
+      document.body.appendChild(textarea);
+      textarea.focus();
+      textarea.select();
+      try {
+        document.execCommand('copy');
+      } catch (err) {}
+      document.body.removeChild(textarea);
+    }
+
+    function resetCatalogFilters() {
+      activeCategory = 'All';
+      searchQuery = '';
+      document.getElementById('appSearchInput').value = '';
+      updatePillStyles();
+      renderCatalog();
+    }
+
+    function updatePillStyles() {
+      document.querySelectorAll('.category-pill').forEach(btn => {
+        const isCurrent = btn.getAttribute('data-category') === activeCategory;
+        if (isCurrent) {
+          btn.className = 'category-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-display font-bold tracking-wide transition-all bg-gradient-to-r from-nord-8 to-arda-laurelin text-nord-darkest shadow-sm';
+        } else {
+          btn.className = 'category-pill shrink-0 px-4 py-2 rounded-xl text-xs sm:text-sm font-display font-semibold tracking-wide transition-all bg-white dark:bg-nord-1 text-nord-1 dark:text-nord-4 hover:border-arda-gold border border-arda-gold/30';
+        }
+      });
+    }
+
+    // ============================================================================
+    // 8. VALINOR STARFIELD & OSTREE CONSTELLATION CANVAS
+    // ============================================================================
+    function initValinorStarfield() {
+      const canvas = document.getElementById('valinorStarfield');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      let stars = [];
+
+      function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const count = Math.min(75, Math.floor((canvas.width * canvas.height) / 22000));
+        stars = Array.from({ length: count }, () => ({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.18,
+          vy: (Math.random() - 0.5) * 0.18,
+          r: Math.random() * 1.7 + 0.6,
+          gold: Math.random() > 0.65
+        }));
+      }
+
+      function drawStarfield() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < stars.length; i++) {
+          const s = stars[i];
+          s.x += s.vx;
+          s.y += s.vy;
+          if (s.x < 0) s.x = canvas.width;
+          if (s.x > canvas.width) s.x = 0;
+          if (s.y < 0) s.y = canvas.height;
+          if (s.y > canvas.height) s.y = 0;
+
+          ctx.beginPath();
+          ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
+          ctx.fillStyle = s.gold ? 'rgba(235, 203, 139, 0.75)' : 'rgba(136, 192, 208, 0.75)';
+          ctx.fill();
+
+          // Faint OSTree constellation links between nearby stars
+          for (let j = i + 1; j < stars.length; j++) {
+            const s2 = stars[j];
+            const dx = s.x - s2.x;
+            const dy = s.y - s2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 115) {
+              ctx.beginPath();
+              ctx.moveTo(s.x, s.y);
+              ctx.lineTo(s2.x, s2.y);
+              ctx.strokeStyle = `rgba(136, 192, 208, ${(1 - dist / 115) * 0.16})`;
+              ctx.lineWidth = 0.7;
+              ctx.stroke();
+            }
+          }
+        }
+        requestAnimationFrame(drawStarfield);
+      }
+
+      window.addEventListener('resize', resizeCanvas);
+      resizeCanvas();
+      drawStarfield();
+    }
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      initValinorStarfield();
+      loadCatalogData();
+
+      document.querySelectorAll('.category-pill').forEach(btn => {
+        btn.addEventListener('click', () => {
+          activeCategory = btn.getAttribute('data-category');
+          updatePillStyles();
+          renderCatalog();
+        });
+      });
+
+      document.getElementById('appSearchInput').addEventListener('input', (e) => {
+        searchQuery = e.target.value;
+        renderCatalog();
+      });
+
+      const themeBtn = document.getElementById('themeToggleBtn');
+      const themeNameLabel = document.getElementById('themeNameLabel');
+      themeBtn.addEventListener('click', () => {
+        const htmlEl = document.documentElement;
+        htmlEl.classList.toggle('dark');
+        const isDark = htmlEl.classList.contains('dark');
+        if (themeNameLabel) {
+          themeNameLabel.textContent = isDark ? 'Valinor Starlight' : 'Minas Tirith Ivory';
+        }
+      });
+
+      const modal = document.getElementById('appDetailsModal');
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeAppModal();
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') closeAppModal();
+      });
+    });
+  </script>
+</body>
+</html>
