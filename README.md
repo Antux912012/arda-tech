@@ -36,7 +36,7 @@ sudo apt update
 | **CachyOS Kernel Updater** | `1.1.2` | `all` | `sudo apt install cachy-kernel-updater` |
 | **YouTube Comment Extractor** | `0.6` | `all` | `sudo apt install yt-comment-extractor` |
 | **YouTube Comment Extractor Service** | `0.6` | `all` | `sudo apt install yt-comment-extractor-service` |
-| **Súlimo (Arda's Breath)** | `0.2.0` | `amd64` | `sudo apt install sulimo` |
+| **Súlimo (Arda's Breath)** | `0.3.0` | `amd64` | `sudo apt install sulimo` |
 | **Validity VFS5011 Linux Fix** | `1.0.0` | `all` | `sudo apt install vfs5011-linux-fix` |
 
 ---
